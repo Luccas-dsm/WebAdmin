@@ -2,15 +2,13 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-    <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Google.Cloud.Firestore" Version="3.3.0" />
+    <ProjectReference Include="..\Shared\WebAdmin.Shared.csproj" />
+    <ProjectReference Include="..\WebAdmin.DataAccess\WebAdmin.DataAccess.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <SupportedPlatform Include="browser" />
-  </ItemGroup>
 </Project>
