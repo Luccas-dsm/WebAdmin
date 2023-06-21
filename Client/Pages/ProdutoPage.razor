@@ -4,7 +4,7 @@
 @inject HttpClient Http
 
 <div class="container">
-    <h2>Tabela com Bootstrap</h2>
+    <h2>Tabela de produtos cadastrados</h2>
     <table class="table">
         <thead>
             <tr>
@@ -15,14 +15,22 @@
         </thead>
         <tbody>
             <tr>
-                <td>1</td>
-                <td>John Doe</td>
-                <td>
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ManterProduto">
-                        Editar
-                    </button>
-                    <button class="btn btn-danger">Excluir</button>
-                </td>
+                @foreach (var item in Produtos)
+                {
+
+                    <td>@item.Id</td>
+                    <td>@item.Nome</td>
+                    <td>
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#@item.Id">
+                            Editar
+                        </button>
+                        <ManterProdutoModalComponent Id="@item.Id" Produto="@item" />
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#@item.Id-delete">
+                            Excluir
+                        </button>
+                        <DeleteModalComponent Id="@item.Id" Diretorio="Produto/"  Nome="@item.Nome"/>
+                    </td>
+                }
             </tr>
             <!-- Adicione mais linhas conforme necessário -->
         </tbody>
@@ -34,50 +42,66 @@
     Editar
 </button>*@
 
-@*<ManterProdutoModalComponent />*@
+
+
 @code {
 
-    List<ProdutoModel> Produtos = new List<ProdutoModel>()
-    {
-     new ProdutoModel
-        {
-            Nome = "Tio patinhas",
-            Descricao = "Descrição do tio patinhas",
-            Categoria = new CategoriaModel()
-            {
-                Seq = "1",
-                Nome = "teste Cat"   
 
-            },
-            Preco = 9.99,
-            Imagens = new List<string> { "imagem1.jpg", "imagem2.jpg" },
-            Id = "1",
-            Estoque = 10,
-            PesoOuQuantidade = 0.5,
-            Dimensoes = new Dimensoes()
-            {
-                Altura=12.00,
-                Comprimento= 10.00,
-                Largura = 5.00
-            },
-            OpcoesVariacao = new List<string> { "Opção 1", "Opção 2" },
-            Disponibilidade = true,
-            PalavrasChave = new List<string> { "palavra1", "palavra2" },
-            Destaque = true,
-            ProdutoEmPromocao = false
-        }}
 
-        ;
 
     protected override async Task OnInitializedAsync()
     {
-        
-        //Produtos = await Http.GetFromJsonAsync<List<ProdutoModel>>("Produto");
 
-        foreach (var item in Produtos)
-        {
-          await Http.PostAsJsonAsync<ProdutoModel>("Produto", item);
-        }
+        Produtos = await Http.GetFromJsonAsync<List<ProdutoModel>>("Produto");
+
+        //foreach (var item in Produtos)
+        //{
+        //  await Http.PostAsJsonAsync<ProdutoModel>("Produto", item);
+        //}
 
     }
+
+    public async void DeleteProduto(string id)
+    {
+        await Http.DeleteAsync("Produto/" + id);
+    }
+
+
+    public string Id { get; set; }
+
+    //public void CapturaID(string id) => this.Id = id;
+
+    List<ProdutoModel>? Produtos = new List<ProdutoModel>();
+    //{
+    // new ProdutoModel
+    //    {
+    //        Nome = "Tio patinhas",
+    //        Descricao = "Descrição do tio patinhas",
+    //        Categoria = new CategoriaModel()
+    //        {
+    //            Seq = "1",
+    //            Nome = "teste Cat"
+
+    //        },
+    //        Preco = 9.99,
+    //        Imagens = new List<string> { "imagem1.jpg", "imagem2.jpg" },
+    //        Id = "1",
+    //        Estoque = 10,
+    //        PesoOuQuantidade = 0.5,
+    //        Dimensoes = new Dimensoes()
+    //        {
+    //            Altura=12.00,
+    //            Comprimento= 10.00,
+    //            Largura = 5.00
+    //        },
+    //        OpcoesVariacao = new List<string> { "Opção 1", "Opção 2" },
+    //        Disponibilidade = true,
+    //        PalavrasChave = new List<string> { "palavra1", "palavra2" },
+    //        Destaque = true,
+    //        ProdutoEmPromocao = false
+    //    }}
+
+    //    ;
+
+
 }

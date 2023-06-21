@@ -1,0 +1,36 @@
+﻿@using WebAdmin.Client.Shared.Produtos
+@using WebAdmin.Shared.Models;
+@inject HttpClient Http
+
+<div class="modal fade" id="@Id-delete" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              Deseja realmente excluir o item "@Nome"?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" @onclick="(() => DeleteProduto())"  data-bs-dismiss=" modal">Sim</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Não</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+
+    [Parameter]
+    public string Diretorio { get; set; }
+    [Parameter]
+    public string Id { get; set; }
+    [Parameter]
+    public string Nome { get; set; }
+
+    public async void DeleteProduto()
+    {
+        await Http.DeleteAsync(Diretorio + Id);
+    }
+}
