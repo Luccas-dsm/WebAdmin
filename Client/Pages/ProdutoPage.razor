@@ -1,0 +1,38 @@
+﻿@page "/produtos"
+@using WebAdmin.Client.Shared.Produtos
+
+<div class="container">
+    <h2>Tabela com Bootstrap</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Editar ou Excluir</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>John Doe</td>
+                <td>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ManterProduto">
+                        Editar
+                    </button>
+                    <button class="btn btn-danger">Excluir</button>
+                </td>
+            </tr>
+            <!-- Adicione mais linhas conforme necessário -->
+        </tbody>
+    </table>
+</div>
+
+
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ManterProduto">
+   Editar
+</button>
+
+<ManterProdutoModalComponent/>
+@code {
+
+}

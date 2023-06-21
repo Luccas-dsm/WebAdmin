@@ -1,13 +1,13 @@
 ﻿namespace WebAdmin.Shared.Models
 {
-    public class Produto
+    public class ProdutoModel
     {
         public string Nome { get; set; }
         public string Descricao { get; set; }
         public CategoriaModel Categoria { get; set; }
         public decimal Preco { get; set; }
         public List<string> Imagens { get; set; }
-        public string Seq { get; set; }
+        public string Id { get; set; }
         public int Estoque { get; set; }
         public double PesoOuQuantidade { get; set; }
         public Dimensoes? Dimensoes { get; set; }
