@@ -1,5 +1,7 @@
 ﻿@page "/produtos"
 @using WebAdmin.Client.Shared.Produtos
+@using WebAdmin.Shared.Models;
+@inject HttpClient Http
 
 <div class="container">
     <h2>Tabela com Bootstrap</h2>
@@ -28,11 +30,54 @@
 </div>
 
 
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ManterProduto">
-   Editar
-</button>
+@*<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ManterProduto">
+    Editar
+</button>*@
 
-<ManterProdutoModalComponent/>
+@*<ManterProdutoModalComponent />*@
 @code {
 
+    List<ProdutoModel> Produtos = new List<ProdutoModel>()
+    {
+     new ProdutoModel
+        {
+            Nome = "Tio patinhas",
+            Descricao = "Descrição do tio patinhas",
+            Categoria = new CategoriaModel()
+            {
+                Seq = "1",
+                Nome = "teste Cat"   
+
+            },
+            Preco = 9.99,
+            Imagens = new List<string> { "imagem1.jpg", "imagem2.jpg" },
+            Id = "1",
+            Estoque = 10,
+            PesoOuQuantidade = 0.5,
+            Dimensoes = new Dimensoes()
+            {
+                Altura=12.00,
+                Comprimento= 10.00,
+                Largura = 5.00
+            },
+            OpcoesVariacao = new List<string> { "Opção 1", "Opção 2" },
+            Disponibilidade = true,
+            PalavrasChave = new List<string> { "palavra1", "palavra2" },
+            Destaque = true,
+            ProdutoEmPromocao = false
+        }}
+
+        ;
+
+    protected override async Task OnInitializedAsync()
+    {
+        
+        //Produtos = await Http.GetFromJsonAsync<List<ProdutoModel>>("Produto");
+
+        foreach (var item in Produtos)
+        {
+          await Http.PostAsJsonAsync<ProdutoModel>("Produto", item);
+        }
+
+    }
 }

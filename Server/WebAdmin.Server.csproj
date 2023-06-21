@@ -11,7 +11,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\WebAdmin.Service\WebAdmin.Service.csproj" />
     <ProjectReference Include="..\Client\WebAdmin.Client.csproj" />
     <ProjectReference Include="..\Shared\WebAdmin.Shared.csproj" />
     <ProjectReference Include="..\WebAdmin.Service\WebAdmin.Service.csproj" />

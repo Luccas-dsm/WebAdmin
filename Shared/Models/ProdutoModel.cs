@@ -2,6 +2,7 @@
 
 namespace WebAdmin.Shared.Models
 {
+    [FirestoreData]
     public class ProdutoModel
     {
         [FirestoreProperty]
@@ -11,7 +12,7 @@ namespace WebAdmin.Shared.Models
         [FirestoreProperty]
         public CategoriaModel Categoria { get; set; }
         [FirestoreProperty]
-        public decimal Preco { get; set; }
+        public double Preco { get; set; }
         [FirestoreProperty]
         public List<string> Imagens { get; set; }
         [FirestoreProperty]

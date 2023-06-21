@@ -13,7 +13,7 @@ namespace WebAdmin.DataAccess.DomainServices
 
             try
             {
-                Query produtoQuery = fireStoreDb.AcessoBaseFireStore().Collection("produtos");
+                Query produtoQuery = fireStoreDb.AcessoBaseFireStore().Collection("produto");
                 QuerySnapshot produtoQuerySnapshot = await produtoQuery.GetSnapshotAsync();
                 List<ProdutoModel> lstProduto = new List<ProdutoModel>();
 
@@ -41,7 +41,7 @@ namespace WebAdmin.DataAccess.DomainServices
         {
             try
             {
-                CollectionReference colRef = fireStoreDb.AcessoBaseFireStore().Collection("produtos");
+                CollectionReference colRef = fireStoreDb.AcessoBaseFireStore().Collection("produto");
                 await colRef.AddAsync(produto);
             }
             catch
@@ -53,7 +53,7 @@ namespace WebAdmin.DataAccess.DomainServices
         {
             try
             {
-                DocumentReference empRef = fireStoreDb.AcessoBaseFireStore().Collection("produtos").Document(produto.Id);
+                DocumentReference empRef = fireStoreDb.AcessoBaseFireStore().Collection("produto").Document(produto.Id);
                 await empRef.SetAsync(produto, SetOptions.Overwrite);
             }
             catch
@@ -65,7 +65,7 @@ namespace WebAdmin.DataAccess.DomainServices
         {
             try
             {
-                DocumentReference docRef = fireStoreDb.AcessoBaseFireStore().Collection("produtos").Document(id);
+                DocumentReference docRef = fireStoreDb.AcessoBaseFireStore().Collection("produto").Document(id);
                 DocumentSnapshot snapshot = await docRef.GetSnapshotAsync();
 
                 if (snapshot.Exists)
@@ -88,7 +88,7 @@ namespace WebAdmin.DataAccess.DomainServices
         {
             try
             {
-                DocumentReference produtoRef = fireStoreDb.AcessoBaseFireStore().Collection("produtos").Document(id);
+                DocumentReference produtoRef = fireStoreDb.AcessoBaseFireStore().Collection("produto").Document(id);
                 await produtoRef.DeleteAsync();
             }
             catch

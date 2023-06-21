@@ -14,7 +14,9 @@ namespace WebAdmin.DataAccess
 
         public FirestoreDb AcessoBaseFireStore()
         {
-            string filepath = "../DataAccess/Access/genesis-93f18-firebase-adminsdk-j2gxw-f50f8eb355.json";
+
+
+            string filepath = "../WebAdmin.DataAccess/Access/genesis-93f18-firebase-adminsdk-j2gxw-f50f8eb355.json";
             Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", filepath);
             return FirestoreDb.Create(this.BancoReferente);
 
