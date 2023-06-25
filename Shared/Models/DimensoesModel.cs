@@ -3,7 +3,7 @@
 namespace WebAdmin.Shared.Models
 {
     [FirestoreData]
-    public class Dimensoes
+    public class DimensoesModel
     {
         [FirestoreProperty]
         public double Comprimento { get; set; }

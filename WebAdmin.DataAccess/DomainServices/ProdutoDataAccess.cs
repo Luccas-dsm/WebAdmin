@@ -53,8 +53,8 @@ namespace WebAdmin.DataAccess.DomainServices
         {
             try
             {
-                DocumentReference empRef = fireStoreDb.AcessoBaseFireStore().Collection("produto").Document(produto.Id);
-                await empRef.SetAsync(produto, SetOptions.Overwrite);
+                DocumentReference docRef = fireStoreDb.AcessoBaseFireStore().Collection("produto").Document(produto.Id);
+                await docRef.SetAsync(produto, SetOptions.Overwrite);
             }
             catch
             {

@@ -26,6 +26,11 @@ namespace WebAdmin.Server.Controllers
         {
             produtoDataAccess.AddProduto(produto);
         }
+        [HttpPut]
+        public void Put([FromBody] ProdutoModel produto)
+        {
+            produtoDataAccess.UpdateProduto(produto);
+        }
         [HttpDelete("{id}")]
         public void Delete(string id)
         {

@@ -4,6 +4,12 @@
 @inject HttpClient Http
 
 <div class="container">
+    <div>
+        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#AddEditModal" @onclick="(() =>LimpaProduto ())">
+            Adicionar Produto
+        </button>
+    </div>
+
     <h2>Tabela de produtos cadastrados</h2>
     <table class="table">
         <thead>
@@ -13,95 +19,257 @@
                 <th>Editar ou Excluir</th>
             </tr>
         </thead>
+
         <tbody>
-            <tr>
-                @foreach (var item in Produtos)
-                {
+            @foreach (var item in Produtos)
+            {
+                <tr>
 
                     <td>@item.Id</td>
                     <td>@item.Nome</td>
                     <td>
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#@item.Id">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" @onclick="@(async () => await GetProduto(item.Id))" data-bs-target="#AddEditModal">
                             Editar
                         </button>
-                        <ManterProdutoModalComponent Id="@item.Id" Produto="@item" />
-                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#@item.Id-delete">
+
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#DeletarProdutoModal" @onclick="@(async () => await GetProduto(item.Id))">
                             Excluir
                         </button>
-                        <DeleteModalComponent Id="@item.Id" Diretorio="Produto/"  Nome="@item.Nome"/>
                     </td>
-                }
-            </tr>
+                </tr>
+            }
             <!-- Adicione mais linhas conforme necessário -->
         </tbody>
     </table>
 </div>
 
+@*Modal Deletar*@
+<div class="modal fade" id="DeletarProdutoModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Deseja realmente excluir o item "@Produto.Nome"?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" @onclick="@(async () => await DeleteProduto(Produto.Id))" data-bs-dismiss=" modal">Sim</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Não</button>
+            </div>
+        </div>
+    </div>
+</div>
 
-@*<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ManterProduto">
-    Editar
-</button>*@
+@*Modal Adicionar e Editar*@
+<div class="modal fade" id="AddEditModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="ManterProdutoModalLabel">Modal title</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <h1>Cadastro de Produto</h1>
+                    <form class="row g-3">
+                        <div class="col-md-4">
+                            <label for="inputNome" class="form-label">Nome do Produto</label>
+                            <input type="text" class="form-control" id="inputNome" @bind="@Produto.Nome">
+                        </div>
 
+                        <div class="col-2">
+                            <label for="inputCategoria" class="form-label">Categoria</label>
+                            <select id="inputCategoria" class="form-select">
+
+                                <option selected>Selecione...</option>
+                                @foreach (var item in Categorias)
+                                {
+                                    <option value="@item.Nome">@item.Nome</option>
+                                }
+
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="inputPreco" class="form-label">Preço</label>
+                            <input type="text" class="form-control" id="inputPreco" @bind="@Produto.Preco">
+                        </div>                    
+                        <div class="col-2">
+                            <label for="inputPalavrasChave" class="form-label">Palavras Chave</label>
+                            <select id="inputPalavrasChave" class="form-select">
+
+                                <option selected>Selecione...</option>
+                                @if (Produto.PalavrasChave != null && Produto.PalavrasChave.Count() > 0)
+                                {
+                                    @foreach (var item in Produto.PalavrasChave)
+                                    {
+                                        <option value="@item">@item</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="inputEstoque" class="form-label">Estoque</label>
+                            <input type="text" class="form-control" id="inputEstoque" @bind="@Produto.Estoque">
+                        </div>
+                        <div class="col-md-2">
+                            <label for="inputPesoQuantidade" class="form-label">Peso / Quantidade</label>
+                            <input type="text" class="form-control" id="inputPesoQuantidade" @bind="@Produto.PesoOuQuantidade">
+                        </div>
+                        <div class="col-2">
+                            <label for="inputOpcoesVariacao" class="form-label">Opções de variação</label>
+                            <select id="inputOpcoesVariacao" class="form-select">
+
+                                <option selected>Selecione...</option>
+                                @if (Produto.OpcoesVariacao != null && Produto.OpcoesVariacao.Count() > 0)
+                                {
+                                    @foreach (var item in Produto.OpcoesVariacao)
+                                    {
+                                        <option value="@item">@item</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+
+                        <div class="form-check col-md-2">
+                            <input class="form-check-input" type="checkbox" value="" id="Destaque" @bind="@Produto.Destaque">
+                            <label class="form-check-label" for="Destaque">
+                                Destaque
+                            </label>
+                        </div>
+                        <div class="form-check col-md-4">
+                            <input class="form-check-input" type="checkbox" value="" id="ProdutoPromocao" @bind="@Produto.ProdutoEmPromocao">
+                            <label class="form-check-label" for="ProdutoPromocao">
+                                Produto em promoção
+                            </label>
+                        </div>
+
+
+                        <div class="col-md-12">
+                            <label for="textAreaDescricao">Descrição</label>
+                            <textarea class="form-control" id="textAreaDescricao" rows="3" @bind="@Produto.Descricao"></textarea>
+                        </div>
+                        <div class="input-group col-md-12">
+                            <input type="file" class="form-control" id="inputGroupFile02">
+                            <label class="input-group-text" for="inputGroupFile02" >Upload</label>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @onclick="(() =>OnSubmit ())">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 @code {
-
-
-
-
+    protected ProdutoModel Produto = new ProdutoModel() { Dimensoes = new DimensoesModel(), Categoria = new CategoriaModel() { Seq = "", Nome = "" } };
+    protected List<ProdutoModel>? Produtos = new List<ProdutoModel>();
+    protected List<CategoriaModel>? Categorias = new List<CategoriaModel>();
     protected override async Task OnInitializedAsync()
     {
-
-        Produtos = await Http.GetFromJsonAsync<List<ProdutoModel>>("Produto");
-
-        //foreach (var item in Produtos)
-        //{
-        //  await Http.PostAsJsonAsync<ProdutoModel>("Produto", item);
-        //}
-
+        await GetProdutos();
+        await GetCategorias();
     }
+    protected void LimpaProduto() { Produto = new ProdutoModel() { Dimensoes = new DimensoesModel(), Categoria = new CategoriaModel() }; }
 
-    public async void DeleteProduto(string id)
+    protected async Task<List<ProdutoModel>> GetProdutos()
     {
-        await Http.DeleteAsync("Produto/" + id);
+        Produtos = await Http.GetFromJsonAsync<List<ProdutoModel>>("Produto");
+        Produtos.OrderBy(o => o.Nome);
+
+        return Produtos;
+    }
+
+    protected async Task GetProduto(string id)
+    {
+        Produto = await Http.GetFromJsonAsync<ProdutoModel>("Produto/" + id);
+    }
+    protected async Task<List<CategoriaModel>> GetCategorias()
+    {
+
+
+        // Categorias = await Http.GetFromJsonAsync<List<CategoriaModel>>("Categoria");
+        Categorias = new List<CategoriaModel>()
+        {
+            new CategoriaModel()
+            {
+                Seq="1",
+                Nome = "papelaria"
+            },
+                 new CategoriaModel()
+            {
+                Seq="2",
+                Nome = "escritorio"
+            },
+                 new CategoriaModel()
+            {
+                Seq="3",
+                Nome = "infantil"
+            },
+
+        };
+        return Categorias;
+    }
+
+    protected async Task OnSubmit()
+    {
+        HttpResponseMessage save;
+
+        if (string.IsNullOrEmpty(Produto.Id))
+        {
+            save = await Http.PostAsJsonAsync("Produto", Produto);
+        }
+        else
+        {
+            save = await Http.PutAsJsonAsync("Produto", Produto);
+        }
+
+        await GetProdutos();
+    }
+
+    protected async Task DeleteProduto(string id)
+    {
+        var save = await Http.DeleteAsync("produto/" + id);
+        if (save.IsSuccessStatusCode)
+        {
+            await GetProdutos();
+        }
     }
 
 
-    public string Id { get; set; }
 
-    //public void CapturaID(string id) => this.Id = id;
-
-    List<ProdutoModel>? Produtos = new List<ProdutoModel>();
+    //   new ProdutoModel
     //{
-    // new ProdutoModel
+    //    Nome = "Mickey Mouse",
+    //    Descricao = "Descrição do Mickey Mouse",
+    //    Categoria = new CategoriaModel()
     //    {
-    //        Nome = "Tio patinhas",
-    //        Descricao = "Descrição do tio patinhas",
-    //        Categoria = new CategoriaModel()
-    //        {
-    //            Seq = "1",
-    //            Nome = "teste Cat"
-
-    //        },
-    //        Preco = 9.99,
-    //        Imagens = new List<string> { "imagem1.jpg", "imagem2.jpg" },
-    //        Id = "1",
-    //        Estoque = 10,
-    //        PesoOuQuantidade = 0.5,
-    //        Dimensoes = new Dimensoes()
-    //        {
-    //            Altura=12.00,
-    //            Comprimento= 10.00,
-    //            Largura = 5.00
-    //        },
-    //        OpcoesVariacao = new List<string> { "Opção 1", "Opção 2" },
-    //        Disponibilidade = true,
-    //        PalavrasChave = new List<string> { "palavra1", "palavra2" },
-    //        Destaque = true,
-    //        ProdutoEmPromocao = false
-    //    }}
-
-    //    ;
+    //        Seq = "2",
+    //        Nome = "Personagens Disney"
+    //    },
+    //    Preco = 14.99,
+    //    Imagens = new List<string> { "imagem3.jpg", "imagem4.jpg" },
+    //    Id = "2",
+    //    Estoque = 20,
+    //    PesoOuQuantidade = 0.3,
+    //    Dimensoes = new Dimensoes()
+    //    {
+    //        Altura = 8.50,
+    //        Comprimento = 7.00,
+    //        Largura = 4.50
+    //    },
+    //    OpcoesVariacao = new List<string> { "Opção A", "Opção B", "Opção C" },
+    //    Disponibilidade = true,
+    //    PalavrasChave = new List<string> { "desenho animado", "personagem famoso" },
+    //    Destaque = true,
+    //    ProdutoEmPromocao = true
+    //}
 
 
 }

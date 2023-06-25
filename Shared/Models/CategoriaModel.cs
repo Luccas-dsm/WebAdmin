@@ -6,8 +6,8 @@ namespace WebAdmin.Shared.Models
     public class CategoriaModel
     {
         [FirestoreProperty]
-        public string Seq { get; set; }
+        public string? Seq { get; set; }
         [FirestoreProperty]
-        public string Nome { get; set; }
+        public string? Nome { get; set; }
     }
 }
