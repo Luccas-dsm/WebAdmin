@@ -49,14 +49,14 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @onclick="(async () =>LimpaProduto())"></button>
             </div>
             <div class="modal-body">
                 Deseja realmente excluir o item "@Produto.Nome"?
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger" @onclick="@(async () => await DeleteProduto(Produto.Id))" data-bs-dismiss=" modal">Sim</button>
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Não</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @onclick="(async () =>LimpaProduto())">Não</button>
             </div>
         </div>
     </div>
@@ -68,7 +68,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h1 class="modal-title fs-5" id="ManterProdutoModalLabel">Modal title</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @onclick="(async () =>LimpaProduto())"></button>
             </div>
             <div class="modal-body">
                 <div class="container">
@@ -145,11 +145,24 @@
                             </label>
                         </div>
 
+                        @if (Produto.Imagem != null && Produto.Imagem.Count()>0)
+                        {
 
-                        <div class="col-md-12">
-                            <label for="textAreaDescricao">Descrição</label>
-                            <textarea class="form-control" id="textAreaDescricao" rows="3" @bind="@Produto.Descricao"></textarea>
-                        </div>
+                            <div class="col-md-6">
+                                <label for="textAreaDescricao">Descrição</label>
+                                <textarea class="form-control" id="textAreaDescricao" rows="3" @bind="@Produto.Descricao"></textarea>
+                            </div>
+                            <div class="col-md-6">
+                                <img src="@Produto.Imagem.FirstOrDefault().Url" class="img-fluid" alt="Responsive image">
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col-md-12">
+                                <label for="textAreaDescricao">Descrição</label>
+                                <textarea class="form-control" id="textAreaDescricao" rows="3" @bind="@Produto.Descricao"></textarea>
+                            </div>
+                        }
                         <div class="input-group col-md-12">
                             <InputFile OnChange="@LoadFiles" multiple class="form-control" id="inputGroupFile02" />
 
@@ -160,7 +173,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @onclick="(async () =>LimpaProduto())">Close</button>
                 <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @onclick="(async () =>OnSubmit())">Save changes</button>
             </div>
         </div>
@@ -170,17 +183,17 @@
 
 @code {
     protected ProdutoModel Produto = new ProdutoModel() { Dimensoes = new DimensoesModel(), Categoria = new CategoriaModel() { Seq = "", Nome = "" }, Imagem = new List<ArquivoModel>() };
-    
+
     protected List<ProdutoModel>? Produtos = new List<ProdutoModel>();
-   
+
     protected List<CategoriaModel>? Categorias = new List<CategoriaModel>();
-        
+
     protected override async Task OnInitializedAsync()
     {
         await GetProdutos();
         await GetCategorias();
     }
-    
+
     protected void LimpaProduto()
     {
         Produto = new ProdutoModel() { Dimensoes = new DimensoesModel(), Categoria = new CategoriaModel(), Imagem = new List<ArquivoModel>() };
@@ -238,7 +251,7 @@
         {
             save = await Http.PutAsJsonAsync("Produto", Produto);
         }
-
+        LimpaProduto();
         await GetProdutos();
     }
 
@@ -249,13 +262,13 @@
         {
             await GetProdutos();
         }
+        LimpaProduto();
     }
-
 
     private async void LoadFiles(InputFileChangeEventArgs e)
     {
-        if(string.IsNullOrEmpty(Produto.Id))
-        Produto.Imagem = new List<ArquivoModel>();
+        if (string.IsNullOrEmpty(Produto.Id))
+            Produto.Imagem = new List<ArquivoModel>();
 
         var arquivosSelecionados = e.GetMultipleFiles();
         foreach (var file in arquivosSelecionados)

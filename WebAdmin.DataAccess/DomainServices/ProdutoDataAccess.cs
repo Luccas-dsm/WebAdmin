@@ -1,12 +1,15 @@
 ﻿using Google.Cloud.Firestore;
+using Google.Cloud.Firestore.V1;
 using Newtonsoft.Json;
 using WebAdmin.Shared.Models;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace WebAdmin.DataAccess.DomainServices
 {
     public class ProdutoDataAccess
     {
         Access fireStore = new Access("genesis-93f18");
+        private string Buket = "genesis-93f18.appspot.com";
 
         public async Task<List<ProdutoModel>> GetAllProdutos()
         {
@@ -43,30 +46,9 @@ namespace WebAdmin.DataAccess.DomainServices
             {
                 foreach (var imagem in produto.Imagem)
                 {
-                    using (var stream = new MemoryStream(imagem.Conteudo))
-                    {
-
-                        var retorno = fireStore.AcessoBaseStorage().UploadObject("genesis-93f18.appspot.com", imagem.Nome, imagem.Tipo, stream);
-
-                        var storageObject = fireStore.AcessoBaseStorage().GetObject("genesis-93f18.appspot.com", imagem.Nome);
-
-                        string[] sp = storageObject.Id.Split('/');
-
-                        //remove a ultima posição do split
-                        Array.Resize(ref sp, sp.Length - 1);
-
-                        string url = "https://storage.googleapis.com/" + string.Join("/", sp);
-
-                        if (url != null)
-                        {
-                            imagem.Url = url;
-                        }
-
-                        stream.Close();
-                    }
+                    imagem.Url = SalvaArquivoStorage(imagem, Buket);
                 }
             }
-
 
             try
             {
@@ -86,30 +68,7 @@ namespace WebAdmin.DataAccess.DomainServices
             {
                 foreach (var imagem in produto.Imagem)
                 {
-                    if (imagem.Conteudo != null)
-                    {
-                        using (var stream = new MemoryStream(imagem.Conteudo))
-                        {
-
-                            var retorno = fireStore.AcessoBaseStorage().UploadObject("genesis-93f18.appspot.com", imagem.Nome, imagem.Tipo, stream);
-
-                            var storageObject = fireStore.AcessoBaseStorage().GetObject("genesis-93f18.appspot.com", imagem.Nome);
-
-                            string[] sp = storageObject.Id.Split('/');
-
-                            //remove a ultima posição do split
-                            Array.Resize(ref sp, sp.Length - 1);
-
-                            string url = "https://storage.googleapis.com/" + string.Join("/", sp);
-
-                            if (url != null)
-                            {
-                                imagem.Url = url;
-                            }
-
-                            stream.Close();
-                        }
-                    }
+                    imagem.Url = SalvaArquivoStorage(imagem, Buket);
                 }
             }
 
@@ -158,11 +117,33 @@ namespace WebAdmin.DataAccess.DomainServices
                 throw;
             }
         }
+        public string SalvaArquivoStorage(ArquivoModel arquivo, string buket)
+        {
+            try
+            {
+                string url = "";
+                using (var stream = new MemoryStream(arquivo.Conteudo))
+                {
+                    var retorno = fireStore.AcessoBaseStorage().UploadObject(buket, arquivo.Nome, arquivo.Tipo, stream);
+                    var storageObject = fireStore.AcessoBaseStorage().GetObject(buket, arquivo.Nome);
+
+                    string[] sp = storageObject.Id.Split('/');
+
+                    //remove a ultima posição do split
+                    Array.Resize(ref sp, sp.Length - 1);
+
+                    url = "https://storage.googleapis.com/" + string.Join("/", sp);
+
+                    stream.Close();
+                }
+                return url;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Houve um erro ao salvar o arquivo no storage do fire base, código do erro:" + ex.Message);
+            }
+        }
     }
 }
 
 
-public class teste
-{
-    public string Nome { get; set; }
-}
