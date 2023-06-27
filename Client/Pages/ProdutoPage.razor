@@ -94,7 +94,7 @@
                         <div class="col-md-2">
                             <label for="inputPreco" class="form-label">Preço</label>
                             <input type="text" class="form-control" id="inputPreco" @bind="@Produto.Preco">
-                        </div>                    
+                        </div>
                         <div class="col-2">
                             <label for="inputPalavrasChave" class="form-label">Palavras Chave</label>
                             <select id="inputPalavrasChave" class="form-select">
@@ -151,8 +151,9 @@
                             <textarea class="form-control" id="textAreaDescricao" rows="3" @bind="@Produto.Descricao"></textarea>
                         </div>
                         <div class="input-group col-md-12">
-                            <input type="file" class="form-control" id="inputGroupFile02">
-                            <label class="input-group-text" for="inputGroupFile02" >Upload</label>
+                            <InputFile OnChange="@LoadFiles" multiple class="form-control" id="inputGroupFile02" />
+
+                            <label class="input-group-text" for="inputGroupFile02">Upload</label>
                         </div>
 
                     </form>
@@ -160,7 +161,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @onclick="(() =>OnSubmit ())">Save changes</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @onclick="(async () =>OnSubmit())">Save changes</button>
             </div>
         </div>
     </div>
@@ -168,15 +169,22 @@
 
 
 @code {
-    protected ProdutoModel Produto = new ProdutoModel() { Dimensoes = new DimensoesModel(), Categoria = new CategoriaModel() { Seq = "", Nome = "" } };
+    protected ProdutoModel Produto = new ProdutoModel() { Dimensoes = new DimensoesModel(), Categoria = new CategoriaModel() { Seq = "", Nome = "" }, Imagem = new List<ArquivoModel>() };
+    
     protected List<ProdutoModel>? Produtos = new List<ProdutoModel>();
+   
     protected List<CategoriaModel>? Categorias = new List<CategoriaModel>();
+        
     protected override async Task OnInitializedAsync()
     {
         await GetProdutos();
         await GetCategorias();
     }
-    protected void LimpaProduto() { Produto = new ProdutoModel() { Dimensoes = new DimensoesModel(), Categoria = new CategoriaModel() }; }
+    
+    protected void LimpaProduto()
+    {
+        Produto = new ProdutoModel() { Dimensoes = new DimensoesModel(), Categoria = new CategoriaModel(), Imagem = new List<ArquivoModel>() };
+    }
 
     protected async Task<List<ProdutoModel>> GetProdutos()
     {
@@ -190,6 +198,7 @@
     {
         Produto = await Http.GetFromJsonAsync<ProdutoModel>("Produto/" + id);
     }
+
     protected async Task<List<CategoriaModel>> GetCategorias()
     {
 
@@ -243,33 +252,32 @@
     }
 
 
+    private async void LoadFiles(InputFileChangeEventArgs e)
+    {
+        if(string.IsNullOrEmpty(Produto.Id))
+        Produto.Imagem = new List<ArquivoModel>();
 
-    //   new ProdutoModel
-    //{
-    //    Nome = "Mickey Mouse",
-    //    Descricao = "Descrição do Mickey Mouse",
-    //    Categoria = new CategoriaModel()
-    //    {
-    //        Seq = "2",
-    //        Nome = "Personagens Disney"
-    //    },
-    //    Preco = 14.99,
-    //    Imagens = new List<string> { "imagem3.jpg", "imagem4.jpg" },
-    //    Id = "2",
-    //    Estoque = 20,
-    //    PesoOuQuantidade = 0.3,
-    //    Dimensoes = new Dimensoes()
-    //    {
-    //        Altura = 8.50,
-    //        Comprimento = 7.00,
-    //        Largura = 4.50
-    //    },
-    //    OpcoesVariacao = new List<string> { "Opção A", "Opção B", "Opção C" },
-    //    Disponibilidade = true,
-    //    PalavrasChave = new List<string> { "desenho animado", "personagem famoso" },
-    //    Destaque = true,
-    //    ProdutoEmPromocao = true
-    //}
+        var arquivosSelecionados = e.GetMultipleFiles();
+        foreach (var file in arquivosSelecionados)
+        {
+            Stream stream = file.OpenReadStream();
+            MemoryStream ms = new MemoryStream();
+            await stream.CopyToAsync(ms);
+            stream.Close();
+            ArquivoModel arquivo = new ArquivoModel();
+            arquivo.Nome = file.Name;
+            arquivo.Tipo = file.ContentType;
+            arquivo.Conteudo = ms.ToArray();
+
+            ms.Close();
+            Produto.Imagem.Add(arquivo);
+        }
+    }
 
 
 }
+
+
+
+
+

@@ -14,8 +14,7 @@ namespace WebAdmin.Shared.Models
         [FirestoreProperty]
         public double Preco { get; set; }
         [FirestoreProperty]
-        public List<string?>? Imagens { get; set; }
-     
+        public List<ArquivoModel?>? Imagem { get; set; }     
         public string? Id { get; set; }
         [FirestoreProperty]
         public int Estoque { get; set; }

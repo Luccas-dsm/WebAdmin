@@ -6,14 +6,14 @@ namespace WebAdmin.DataAccess.DomainServices
 {
     public class ProdutoDataAccess
     {
-        Access fireStoreDb = new Access("genesis-93f18");
+        Access fireStore = new Access("genesis-93f18");
 
         public async Task<List<ProdutoModel>> GetAllProdutos()
         {
 
             try
             {
-                Query produtoQuery = fireStoreDb.AcessoBaseFireStore().Collection("produto");
+                Query produtoQuery = fireStore.AcessoBaseFireStore().Collection("produto");
                 QuerySnapshot produtoQuerySnapshot = await produtoQuery.GetSnapshotAsync();
                 List<ProdutoModel> lstProduto = new List<ProdutoModel>();
 
@@ -39,9 +39,39 @@ namespace WebAdmin.DataAccess.DomainServices
         }
         public async void AddProduto(ProdutoModel produto)
         {
+            if (produto.Imagem.Count() > 0)
+            {
+                foreach (var imagem in produto.Imagem)
+                {
+                    using (var stream = new MemoryStream(imagem.Conteudo))
+                    {
+
+                        var retorno = fireStore.AcessoBaseStorage().UploadObject("genesis-93f18.appspot.com", imagem.Nome, imagem.Tipo, stream);
+
+                        var storageObject = fireStore.AcessoBaseStorage().GetObject("genesis-93f18.appspot.com", imagem.Nome);
+
+                        string[] sp = storageObject.Id.Split('/');
+
+                        //remove a ultima posição do split
+                        Array.Resize(ref sp, sp.Length - 1);
+
+                        string url = "https://storage.googleapis.com/" + string.Join("/", sp);
+
+                        if (url != null)
+                        {
+                            imagem.Url = url;
+                        }
+
+                        stream.Close();
+                    }
+                }
+            }
+
+
             try
             {
-                CollectionReference colRef = fireStoreDb.AcessoBaseFireStore().Collection("produto");
+
+                CollectionReference colRef = fireStore.AcessoBaseFireStore().Collection("produto");
                 await colRef.AddAsync(produto);
             }
             catch
@@ -51,9 +81,41 @@ namespace WebAdmin.DataAccess.DomainServices
         }
         public async void UpdateProduto(ProdutoModel produto)
         {
+
+            if (produto.Imagem.Count() > 0)
+            {
+                foreach (var imagem in produto.Imagem)
+                {
+                    if (imagem.Conteudo != null)
+                    {
+                        using (var stream = new MemoryStream(imagem.Conteudo))
+                        {
+
+                            var retorno = fireStore.AcessoBaseStorage().UploadObject("genesis-93f18.appspot.com", imagem.Nome, imagem.Tipo, stream);
+
+                            var storageObject = fireStore.AcessoBaseStorage().GetObject("genesis-93f18.appspot.com", imagem.Nome);
+
+                            string[] sp = storageObject.Id.Split('/');
+
+                            //remove a ultima posição do split
+                            Array.Resize(ref sp, sp.Length - 1);
+
+                            string url = "https://storage.googleapis.com/" + string.Join("/", sp);
+
+                            if (url != null)
+                            {
+                                imagem.Url = url;
+                            }
+
+                            stream.Close();
+                        }
+                    }
+                }
+            }
+
             try
             {
-                DocumentReference docRef = fireStoreDb.AcessoBaseFireStore().Collection("produto").Document(produto.Id);
+                DocumentReference docRef = fireStore.AcessoBaseFireStore().Collection("produto").Document(produto.Id);
                 await docRef.SetAsync(produto, SetOptions.Overwrite);
             }
             catch
@@ -65,7 +127,7 @@ namespace WebAdmin.DataAccess.DomainServices
         {
             try
             {
-                DocumentReference docRef = fireStoreDb.AcessoBaseFireStore().Collection("produto").Document(id);
+                DocumentReference docRef = fireStore.AcessoBaseFireStore().Collection("produto").Document(id);
                 DocumentSnapshot snapshot = await docRef.GetSnapshotAsync();
 
                 if (snapshot.Exists)
@@ -88,13 +150,19 @@ namespace WebAdmin.DataAccess.DomainServices
         {
             try
             {
-                DocumentReference produtoRef = fireStoreDb.AcessoBaseFireStore().Collection("produto").Document(id);
+                DocumentReference produtoRef = fireStore.AcessoBaseFireStore().Collection("produto").Document(id);
                 await produtoRef.DeleteAsync();
             }
             catch
             {
                 throw;
             }
-        }        
+        }
     }
+}
+
+
+public class teste
+{
+    public string Nome { get; set; }
 }
