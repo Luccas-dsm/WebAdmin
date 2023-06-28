@@ -1,0 +1,133 @@
+﻿@page "/sections"
+@using WebAdmin.Shared.Models;
+@inject HttpClient Http
+
+
+<div class="container">
+    <div>
+        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#AddEditModal" @onclick="(() =>LimpaSection())">
+            Adicionar Produto
+        </button>
+    </div>
+    @if(Sections == null)
+    {
+        <p>Carregando...</p>
+    }
+    <h2>Tabela de produtos cadastrados</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Editar ou Excluir</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var item in Sections)
+            {
+                <tr>
+                    <td>@item.Id</td>
+                    <td>@item.Titulo</td>
+                    <td>
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" @onclick="@(async () => await GetSection(item.Id))" data-bs-target="#AddEditModal">
+                            Editar
+                        </button>
+
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#DeletarProdutoModal" @onclick="@(async () => await GetSection(item.Id))">
+                            Excluir
+                        </button>
+                    </td>
+                </tr>
+            }
+            <!-- Adicione mais linhas conforme necessário -->
+        </tbody>
+    </table>
+</div>
+
+@*Modal Deletar*@
+<div class="modal fade" id="DeletarProdutoModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @onclick="(async () =>LimpaSection())"></button>
+            </div>
+            <div class="modal-body">
+                Deseja realmente excluir o item "@Section.Titulo"?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" @onclick="@(async () => await DeleteSection(Section.Id))" data-bs-dismiss=" modal">Sim</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @onclick="(async () =>LimpaSection())">Não</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*Modal Adicionar e Editar*@
+<div class="modal fade" id="AddEditModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="ManterProdutoModalLabel">Modal title</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @onclick="(async () =>LimpaSection())"></button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <h1>Cadastro de Produto</h1>
+                    <form class="row g-3">
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @onclick="(async () =>LimpaSection())">Close</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @onclick="(async () =>LimpaSection())">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+@code {
+    protected SectionModel Section = new SectionModel();
+    protected List<SectionModel> Sections = new List<SectionModel>();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetSections();
+    }
+
+    protected void LimpaSection()
+    {
+        Section = new SectionModel();
+    }
+
+    protected async Task<List<SectionModel>> GetSections()
+    {
+        Sections = await Http.GetFromJsonAsync<List<SectionModel>>("section");
+
+        return Sections;
+    }
+
+    protected async Task GetSection(string id)
+    {
+        Section = await Http.GetFromJsonAsync<SectionModel>("section/" + id);
+    }
+
+    protected async Task DeleteSection(string id)
+    {
+        var save = await Http.DeleteAsync("section/" + id);
+        if (save.IsSuccessStatusCode)
+        {
+            await GetSections();
+        }
+
+        LimpaSection();
+    }
+
+
+
+}

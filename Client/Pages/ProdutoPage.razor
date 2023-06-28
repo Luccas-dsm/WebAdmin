@@ -215,6 +215,16 @@
         Produto = await Http.GetFromJsonAsync<ProdutoModel>("Produto/" + id);
     }
 
+    protected async Task DeleteProduto(string id)
+    {
+        var save = await Http.DeleteAsync("produto/" + id);
+        if (save.IsSuccessStatusCode)
+        {
+            await GetProdutos();
+        }
+        LimpaProduto();
+    }
+
     protected async Task<List<CategoriaModel>> GetCategorias()
     {
 
@@ -259,15 +269,6 @@
         await GetProdutos();
     }
 
-    protected async Task DeleteProduto(string id)
-    {
-        var save = await Http.DeleteAsync("produto/" + id);
-        if (save.IsSuccessStatusCode)
-        {
-            await GetProdutos();
-        }
-        LimpaProduto();
-    }
 
     private async void LoadFiles(InputFileChangeEventArgs e)
     {
