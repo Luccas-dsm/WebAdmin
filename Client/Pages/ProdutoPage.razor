@@ -3,6 +3,7 @@
 @using WebAdmin.Shared.Models;
 @inject HttpClient Http
 
+
 <div class="container">
     <div>
         <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#AddEditModal" @onclick="(() =>LimpaProduto ())">
@@ -145,7 +146,7 @@
                             </label>
                         </div>
 
-                        @if (Produto.Imagem != null && Produto.Imagem.Count()>0)
+                        @if (Produto.Imagem != null && Produto.Imagem.Count() > 0)
                         {
 
                             <div class="col-md-6">
@@ -179,6 +180,8 @@
         </div>
     </div>
 </div>
+
+
 
 
 @code {
@@ -242,8 +245,8 @@
     protected async Task OnSubmit()
     {
         HttpResponseMessage save;
-
-        if (string.IsNullOrEmpty(Produto.Id))
+        
+            if (string.IsNullOrEmpty(Produto.Id))
         {
             save = await Http.PostAsJsonAsync("Produto", Produto);
         }
@@ -251,6 +254,7 @@
         {
             save = await Http.PutAsJsonAsync("Produto", Produto);
         }
+
         LimpaProduto();
         await GetProdutos();
     }
@@ -267,8 +271,9 @@
 
     private async void LoadFiles(InputFileChangeEventArgs e)
     {
-        if (string.IsNullOrEmpty(Produto.Id))
+        if (string.IsNullOrEmpty(Produto.Id) || Produto.Imagem==null)
             Produto.Imagem = new List<ArquivoModel>();
+
 
         var arquivosSelecionados = e.GetMultipleFiles();
         foreach (var file in arquivosSelecionados)
