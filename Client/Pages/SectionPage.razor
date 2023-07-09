@@ -9,7 +9,7 @@
             Adicionar Produto
         </button>
     </div>
-    @if(Sections == null)
+    @if (Sections == null)
     {
         <p>Carregando...</p>
     }
@@ -76,6 +76,7 @@
                 <div class="container">
                     <h1>Cadastro de Produto</h1>
                     <form class="row g-3">
+   
                     </form>
                 </div>
             </div>
@@ -91,12 +92,16 @@
 
 
 @code {
+
+    #region[Controllers]
     protected SectionModel Section = new SectionModel();
     protected List<SectionModel> Sections = new List<SectionModel>();
-
+    protected ProdutoModel Produto = new ProdutoModel() { Dimensoes = new DimensoesModel(), Categoria = new CategoriaModel() { Seq = "", Nome = "" }, Imagem = new List<ArquivoModel>() };
+    protected List<ProdutoModel>? Produtos = new List<ProdutoModel>();
 
     protected override async Task OnInitializedAsync()
     {
+        await GetProdutos();
         await GetSections();
     }
 
@@ -128,6 +133,21 @@
         LimpaSection();
     }
 
+    protected async Task<List<ProdutoModel>> GetProdutos()
+    {
+        Produtos = await Http.GetFromJsonAsync<List<ProdutoModel>>("Produto");
+        Produtos.OrderBy(o => o.Nome);
+
+        return Produtos;
+    }
+    #endregion
 
 
 }
+
+
+
+
+
+
+

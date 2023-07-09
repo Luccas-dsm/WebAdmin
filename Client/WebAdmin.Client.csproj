@@ -10,7 +10,10 @@
   <ItemGroup>
     <PackageReference Include="Blazorise" Version="1.2.4" />
     <PackageReference Include="Blazorise.Bootstrap" Version="1.2.4" />
+    <PackageReference Include="Blazorise.Icons.Bootstrap" Version="1.2.4" />
     <PackageReference Include="Blazorise.Icons.FontAwesome" Version="1.2.4" />
+    <PackageReference Include="Blazorise.Icons.Material" Version="1.2.4" />
+    <PackageReference Include="Blazorise.Sidebar" Version="1.2.4" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.13" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.13" PrivateAssets="all" />
   </ItemGroup>
