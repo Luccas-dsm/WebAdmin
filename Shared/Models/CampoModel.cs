@@ -5,15 +5,15 @@ namespace WebAdmin.Shared.Models
     public class CampoModel
     {
         [FirestoreProperty]
-        public string Input { get; set; }
+        public string? Input { get; set; }
 
         [FirestoreProperty]
         public bool Obrigatorio { get; set; }
 
         [FirestoreProperty]
-        public List<string>? Opcoes { get; set; }
+        public List<string?>? Opcoes { get; set; }
 
         [FirestoreProperty]
-        public string Informativo { get; set; }
+        public string? Informativo { get; set; }
     }
 }

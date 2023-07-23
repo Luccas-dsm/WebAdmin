@@ -67,7 +67,7 @@ namespace WebAdmin.DataAccess.DomainServices
         }
         public static async void AddProduto(ProdutoModel produto)
         {
-            if (produto.Imagem.Count() > 0)
+            if (produto.Imagem != null && produto.Imagem.Count() > 0)
             {
                 foreach (var imagem in produto.Imagem)
                 {

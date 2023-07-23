@@ -44,7 +44,7 @@
 </div>
 
 @*Modal Deletar*@
-@*<div class="modal fade" id="DeletarProdutoModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="DeletarProdutoModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -55,12 +55,12 @@
                 Deseja realmente excluir o item "@Produto.Nome"?
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger" @onclick="@(async () => await DeleteProduto(Produto.Id))" data-bs-dismiss=" modal">Sim</button>
+                <button type="button" class="btn btn-danger" @onclick="@(async () => await DeleteProduto(Produto.Id))" data-bs-dismiss="modal">Sim</button>
                 <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @onclick="(async () =>LimpaProduto())">Não</button>
             </div>
         </div>
     </div>
-</div>*@
+</div>
 
 @*Modal Adicionar e Editar*@
 <div class="modal fade" id="AddEditModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -189,11 +189,11 @@
 
         if (string.IsNullOrEmpty(Produto.Id))
         {
-            save = await Http.PostAsJsonAsync("Produto", Produto);
+            save = await Http.PostAsJsonAsync("Produto", this.Produto);
         }
         else
         {
-            save = await Http.PutAsJsonAsync("Produto", Produto);
+            save = await Http.PutAsJsonAsync("Produto", this.Produto);
         }
 
         LimpaProduto();

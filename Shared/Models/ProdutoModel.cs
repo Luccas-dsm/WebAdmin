@@ -5,13 +5,13 @@ namespace WebAdmin.Shared.Models
     [FirestoreData]
     public class ProdutoModel
     {
-        public string Id { get; set; }
+        public string? Id { get; set; }
 
         [FirestoreProperty]
-        public string Nome { get; set; }
+        public string? Nome { get; set; }
 
         [FirestoreProperty]
-        public string Descricao { get; set; }
+        public string? Descricao { get; set; }
 
         [FirestoreProperty]
         public List<ArquivoModel?>? Imagem { get; set; }
@@ -20,7 +20,7 @@ namespace WebAdmin.Shared.Models
         public List<CampoModel>? Campos { get; set; }
 
         [FirestoreProperty]
-        public List<string>? PalavrasChave { get; set; }
+        public List<string?>? PalavrasChave { get; set; }
 
         [FirestoreProperty]
         public bool Destaque { get; set; }
