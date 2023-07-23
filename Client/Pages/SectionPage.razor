@@ -96,7 +96,6 @@
     #region[Controllers]
     protected SectionModel Section = new SectionModel();
     protected List<SectionModel> Sections = new List<SectionModel>();
-    protected ProdutoModel Produto = new ProdutoModel() { Dimensoes = new DimensoesModel(), Categoria = new CategoriaModel() { Seq = "", Nome = "" }, Imagem = new List<ArquivoModel>() };
     protected List<ProdutoModel>? Produtos = new List<ProdutoModel>();
 
     protected override async Task OnInitializedAsync()

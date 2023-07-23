@@ -44,7 +44,7 @@
 </div>
 
 @*Modal Deletar*@
-<div class="modal fade" id="DeletarProdutoModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+@*<div class="modal fade" id="DeletarProdutoModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -60,7 +60,7 @@
             </div>
         </div>
     </div>
-</div>
+</div>*@
 
 @*Modal Adicionar e Editar*@
 <div class="modal fade" id="AddEditModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -80,22 +80,6 @@
                         </div>
 
                         <div class="col-2">
-                            <label for="inputCategoria" class="form-label">Categoria</label>
-                            <select id="inputCategoria" class="form-select">
-
-                                <option selected>Selecione...</option>
-                                @foreach (var item in Categorias)
-                                {
-                                    <option value="@item.Nome">@item.Nome</option>
-                                }
-
-                            </select>
-                        </div>
-                        <div class="col-md-2">
-                            <label for="inputPreco" class="form-label">Preço</label>
-                            <input type="text" class="form-control" id="inputPreco" @bind="@Produto.Preco">
-                        </div>
-                        <div class="col-2">
                             <label for="inputPalavrasChave" class="form-label">Palavras Chave</label>
                             <select id="inputPalavrasChave" class="form-select">
 
@@ -109,29 +93,6 @@
                                 }
                             </select>
                         </div>
-                        <div class="col-md-2">
-                            <label for="inputEstoque" class="form-label">Estoque</label>
-                            <input type="text" class="form-control" id="inputEstoque" @bind="@Produto.Estoque">
-                        </div>
-                        <div class="col-md-2">
-                            <label for="inputPesoQuantidade" class="form-label">Peso / Quantidade</label>
-                            <input type="text" class="form-control" id="inputPesoQuantidade" @bind="@Produto.PesoOuQuantidade">
-                        </div>
-                        <div class="col-2">
-                            <label for="inputOpcoesVariacao" class="form-label">Opções de variação</label>
-                            <select id="inputOpcoesVariacao" class="form-select">
-
-                                <option selected>Selecione...</option>
-                                @if (Produto.OpcoesVariacao != null && Produto.OpcoesVariacao.Count() > 0)
-                                {
-                                    @foreach (var item in Produto.OpcoesVariacao)
-                                    {
-                                        <option value="@item">@item</option>
-                                    }
-                                }
-                            </select>
-                        </div>
-
                         <div class="form-check col-md-2">
                             <input class="form-check-input" type="checkbox" value="" id="Destaque" @bind="@Produto.Destaque">
                             <label class="form-check-label" for="Destaque">
@@ -184,21 +145,19 @@
 
 
 @code {
-    protected ProdutoModel Produto = new ProdutoModel() { Dimensoes = new DimensoesModel(), Categoria = new CategoriaModel() { Seq = "", Nome = "" }, Imagem = new List<ArquivoModel>() };
+    protected ProdutoModel Produto;
 
     protected List<ProdutoModel>? Produtos = new List<ProdutoModel>();
 
-    protected List<CategoriaModel>? Categorias = new List<CategoriaModel>();
-
     protected override async Task OnInitializedAsync()
     {
+        LimpaProduto();
         await GetProdutos();
-        await GetCategorias();
     }
 
     protected void LimpaProduto()
     {
-        Produto = new ProdutoModel() { Dimensoes = new DimensoesModel(), Categoria = new CategoriaModel(), Imagem = new List<ArquivoModel>() };
+        Produto = new ProdutoModel();
     }
 
     protected async Task<List<ProdutoModel>> GetProdutos()
@@ -224,38 +183,11 @@
         LimpaProduto();
     }
 
-    protected async Task<List<CategoriaModel>> GetCategorias()
-    {
-
-
-        // Categorias = await Http.GetFromJsonAsync<List<CategoriaModel>>("Categoria");
-        Categorias = new List<CategoriaModel>()
-        {
-            new CategoriaModel()
-            {
-                Seq="1",
-                Nome = "papelaria"
-            },
-                 new CategoriaModel()
-            {
-                Seq="2",
-                Nome = "escritorio"
-            },
-                 new CategoriaModel()
-            {
-                Seq="3",
-                Nome = "infantil"
-            },
-
-        };
-        return Categorias;
-    }
-
     protected async Task OnSubmit()
     {
         HttpResponseMessage save;
-        
-            if (string.IsNullOrEmpty(Produto.Id))
+
+        if (string.IsNullOrEmpty(Produto.Id))
         {
             save = await Http.PostAsJsonAsync("Produto", Produto);
         }
@@ -271,7 +203,7 @@
 
     private async void LoadFiles(InputFileChangeEventArgs e)
     {
-        if (string.IsNullOrEmpty(Produto.Id) || Produto.Imagem==null)
+        if (string.IsNullOrEmpty(Produto.Id) || Produto.Imagem == null)
             Produto.Imagem = new List<ArquivoModel>();
 
 

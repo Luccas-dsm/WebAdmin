@@ -6,11 +6,11 @@ namespace WebAdmin.DataAccess.DomainServices
 {
     public class ProdutoDataAccess
     {
-        Access fireStore = new Access("genesis-93f18");
-        private string Buket = "genesis-93f18.appspot.com";
+        private static Access fireStore = new Access("genesis-93f18");
+        private static string Buket = "genesis-93f18.appspot.com";
 
 
-        public async Task<List<ProdutoModel>> GetProdutosSelect(List<string> listaSeqs)
+        public static async Task<List<ProdutoModel>> GetProdutosSelect(List<string> listaSeqs)
         {
             List<ProdutoModel> lstProduto = new List<ProdutoModel>();
             // Consultar os produtos no Firestore
@@ -34,7 +34,7 @@ namespace WebAdmin.DataAccess.DomainServices
             return lstProduto;
         }
 
-        public async Task<List<ProdutoModel>> GetAllProdutos()
+        public static async Task<List<ProdutoModel>> GetAllProdutos()
         {
 
 
@@ -65,7 +65,7 @@ namespace WebAdmin.DataAccess.DomainServices
                 throw;
             }
         }
-        public async void AddProduto(ProdutoModel produto)
+        public static async void AddProduto(ProdutoModel produto)
         {
             if (produto.Imagem.Count() > 0)
             {
@@ -86,7 +86,7 @@ namespace WebAdmin.DataAccess.DomainServices
                 throw;
             }
         }
-        public async void UpdateProduto(ProdutoModel produto)
+        public static async void UpdateProduto(ProdutoModel produto)
         {
 
             if (produto.Imagem.Count() > 0)
@@ -108,7 +108,7 @@ namespace WebAdmin.DataAccess.DomainServices
                 throw;
             }
         }
-        public async Task<ProdutoModel> GetProduto(string id)
+        public static async Task<ProdutoModel> GetProduto(string id)
         {
 
 
@@ -134,7 +134,7 @@ namespace WebAdmin.DataAccess.DomainServices
                 throw;
             }
         }
-        public async void DeleteProduto(string id)
+        public static async void DeleteProduto(string id)
         {
             try
             {
@@ -146,7 +146,7 @@ namespace WebAdmin.DataAccess.DomainServices
                 throw;
             }
         }
-        public string SalvaArquivoStorage(ArquivoModel arquivo, string buket)
+        public static string SalvaArquivoStorage(ArquivoModel arquivo, string buket)
         {
             try
             {
