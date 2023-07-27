@@ -1,0 +1,66 @@
+@import '../variables';
+
+@mixin c-btn-base {
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: $font-size-small;
+    font-weight: 500;
+    gap: 8px;
+    border: none;
+}
+
+.c-btn {
+    &__group {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 16px;
+    }
+
+    &__primary {
+        @include c-btn-base;
+        background-color: $primary-color-light;
+        color: #fff;
+        border: 2px solid $primary-color-light;
+
+        &:hover {
+            background-color: $primary-color;
+            border-color: $primary-color;
+        }
+    }
+
+    &__secondary {
+        @include c-btn-base;
+        color: $primary-color-light;
+        border: 2px solid $primary-color-light;
+
+        &:hover {
+            color: #FFF;
+            background-color: $primary-color;
+            border-color: $primary-color;
+        }
+
+        &-danger {
+            @extend .c-btn__secondary;
+            color: $error-color;
+            border-color: $error-color;
+
+            &:hover {
+                color: #FFF;
+                background-color: $error-color;
+                border-color: $error-color;
+            }
+        }
+    }
+
+    &__tertiary {
+        @include c-btn-base;
+        background-color: transparent;
+        color: $primary-color;
+
+        &-danger {
+            @extend .c-btn__tertiary;
+            color: $error-color;
+        }
+    }
+}

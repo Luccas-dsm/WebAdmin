@@ -1,0 +1,58 @@
+﻿.c-btn__group {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 16px;
+}
+.c-btn__primary {
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  gap: 8px;
+  border: none;
+  background-color: #1f82b3;
+  color: #fff;
+  border: 2px solid #1f82b3;
+}
+.c-btn__primary:hover {
+  background-color: #10435C;
+  border-color: #10435C;
+}
+.c-btn__secondary, .c-btn__secondary-danger {
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  gap: 8px;
+  border: none;
+  color: #1f82b3;
+  border: 2px solid #1f82b3;
+}
+.c-btn__secondary:hover, .c-btn__secondary-danger:hover {
+  color: #FFF;
+  background-color: #10435C;
+  border-color: #10435C;
+}
+.c-btn__secondary-danger {
+  color: #EF476F;
+  border-color: #EF476F;
+}
+.c-btn__secondary-danger:hover {
+  color: #FFF;
+  background-color: #EF476F;
+  border-color: #EF476F;
+}
+.c-btn__tertiary, .c-btn__tertiary-danger {
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  gap: 8px;
+  border: none;
+  background-color: transparent;
+  color: #10435C;
+}
+.c-btn__tertiary-danger {
+  color: #EF476F;
+}

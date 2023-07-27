@@ -1,0 +1,38 @@
+﻿[
+  {
+    "outputFile": "wwwroot/css/styles/base/_typography.css",
+    "inputFile": "wwwroot/css/styles/base/_typography.scss"
+  },
+  {
+    "outputFile": "wwwroot/css/styles/base/_reset.css",
+    "inputFile": "wwwroot/css/styles/base/_reset.scss"
+  },
+  {
+    "outputFile": "wwwroot/css/styles/base/main.css",
+    "inputFile": "wwwroot/css/styles/base/main.scss"
+  },
+  {
+    "outputFile": "wwwroot/css/styles/base/_colors.css",
+    "inputFile": "wwwroot/css/styles/base/_colors.scss"
+  },
+  {
+    "outputFile": "Pages/DetalheProduto.razor.css",
+    "inputFile": "wwwroot/css/styles/pages/DetalhePedido.scss"
+  },
+  {
+    "outputFile": "Pages/DetalheProduto.razor.css",
+    "inputFile": "Pages/DetalheProduto.razor.scss"
+  },
+  {
+    "outputFile": "wwwroot/css/styles/base/components/_forms.css",
+    "inputFile": "wwwroot/css/styles/base/components/_forms.scss"
+  },
+  {
+    "outputFile": "wwwroot/css/styles/base/components/_buttons.css",
+    "inputFile": "wwwroot/css/styles/base/components/_buttons.scss"
+  },
+  {
+    "outputFile": "wwwroot/css/styles/base/components/checkbox.css",
+    "inputFile": "wwwroot/css/styles/base/components/checkbox.scss"
+  }
+]

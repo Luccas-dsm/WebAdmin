@@ -1,0 +1,11 @@
+@import 'variables';
+
+body {
+    background-color: $light-blue-color;
+    box-sizing: border-box;
+}
+
+button {
+    /*border: none;*/
+    outline: none;
+}

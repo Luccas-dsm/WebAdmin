@@ -1,0 +1,115 @@
+﻿@page "/detalhe-produto"
+
+
+<h1>Detalhe do produto</h1>
+
+<div class="c-container">
+    <h2 class="c-container__title">Informações básicas</h2>
+
+    <div class="c-group">
+        <form class="c-group__item">
+            <div class="c-form__field">
+                <label class="c-form__label" for="">Nome do Produto</label>
+                <input class="c-form__input" type="text" id="">
+            </div>
+            <div class="c-form__field">
+                <label class="c-form__label" for="">Descrição</label>
+                <textarea class="c-form__textarea" type="text" id=""></textarea>
+            </div>
+            <div class="c-form__field">
+                <label class="c-form__label" for="">Palavras-chave</label>
+                <input class="c-form__input" type="text" id="">
+            </div>
+        </form>
+
+        <div class="c-images c-group__item">
+            <div class="c-images__item">
+            </div>
+            <div class="c-images__item">
+            </div>
+            <div class="c-images__item">
+            </div>
+            <div class="c-images__item">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="c-container">
+    <h2 class="c-container__title">Características que deverão ser selecionadas pelo usuário</h2>
+
+    <form class="c-group__item c-character">
+        <div class="c-form__field">
+            <label class="c-form__label" for="">Nome do campo</label>
+            <input class="c-form__input" type="text" id="">
+        </div>
+        <div class="c-form__field">
+            <label class="c-form__label" for="">Informativo</label>
+            <input class="c-form__input" type="text" id="">
+        </div>
+        <div class="c-form__field">
+            <label class="c-form__label" for="">Opções disponíveis</label>
+            <input class="c-form__input" type="text" id="">
+        </div>
+        <div class="c-checkbox__group">
+            <input class="c-checkbox" id="c-check" type="checkbox">
+            <label class="c-form__label" for="c-check">Campo obrigatório</label>
+        </div>
+        <button class="c-btn__tertiary-danger">
+            X
+            <span>Remover campo</span>
+        </button>   
+    </form>
+
+    <br />
+    <hr />
+    <br />
+
+    <form class="c-group__item c-character">
+        <div class="c-form__field">
+            <label class="c-form__label" for="">Nome do campo</label>
+            <input class="c-form__input" type="text" id="">
+        </div>
+        <div class="c-form__field">
+            <label class="c-form__label" for="">Informativo</label>
+            <input class="c-form__input" type="text" id="">
+        </div>
+        <div class="c-form__field">
+            <label class="c-form__label" for="">Opções disponíveis</label>
+            <input class="c-form__input" type="text" id="">
+        </div>
+        <div class="c-checkbox__group">
+            <input class="c-checkbox" id="c-check" type="checkbox">
+            <label class="c-form__label" for="c-check">Campo obrigatório</label>
+        </div>
+        <button class="c-btn__tertiary-danger">
+            X
+            <span>Remover campo</span>
+        </button>
+    </form>
+
+    <br />
+    <hr />
+    <button class="c-btn__tertiary">
+        +
+        <span>Adicionar campo</span>
+    </button>
+</div>
+<div class="c-btn__group">
+    <button class="c-btn__secondary-danger">
+        <span>Cancelar</span>
+    </button>
+    <button class="c-btn__primary">
+        <span>Salvar alterações</span>
+    </button>
+</div>
+
+
+<MudField Label="Example with RadioGroup" Variant="Variant.Outlined" InnerPadding="true">
+    <MudChip Disabled="true" Color="Color.Secondary">Secondary</MudChip>
+    <MudChip Disabled="true" Color="Color.Info">Info</MudChip>
+</MudField>
+
+<MudItem xs="12" sm="6" md="4">
+    <MudField Label="Filled" Variant="Variant.Filled" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Money"></MudField>
+</MudItem>
