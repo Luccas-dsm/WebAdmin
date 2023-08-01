@@ -55,6 +55,7 @@
 
     &__tertiary {
         @include c-btn-base;
+        padding: 0;
         background-color: transparent;
         color: $primary-color;
 

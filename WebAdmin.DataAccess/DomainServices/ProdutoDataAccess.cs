@@ -110,12 +110,9 @@ namespace WebAdmin.DataAccess.DomainServices
         }
         public static async Task<ProdutoModel> GetProduto(string id)
         {
-
-
             try
             {
-
-                DocumentReference docRef = fireStore.AcessoBaseFireStore().Collection("produto").Document(id);
+                DocumentReference docRef = fireStore.AcessoBaseFireStore().Collection("Produtos").Document(id);
                 DocumentSnapshot snapshot = await docRef.GetSnapshotAsync();
 
                 if (snapshot.Exists)
