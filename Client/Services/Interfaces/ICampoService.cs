@@ -1,7 +1,12 @@
-﻿namespace WebAdmin.Client.Services.Interfaces
+﻿using WebAdmin.Shared.Models;
+
+namespace WebAdmin.Client.Services.Interfaces
 {
     public interface ICampoService
     {
-        int DeleteCampo(int id);
+        void CreateListCampo(List<CampoModel> campos);
+        void DeleteCampo(CampoModel campo);
+        Task<List<CampoModel>> GetCampos();
+        void InsertCampo(CampoModel campo);
     }
 }

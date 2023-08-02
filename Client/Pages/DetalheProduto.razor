@@ -1,4 +1,5 @@
 ﻿@page "/detalhe-produto"
+@using WebAdmin.Client.Services.Interfaces;
 @using WebAdmin.Client.Shared.Produtos
 @using WebAdmin.Shared.Models;
 @inject HttpClient Http
@@ -36,10 +37,17 @@
 <div class="c-container">
     <h2 class="c-container__title">Características que deverão ser selecionadas pelo usuário</h2>
 
-    <CamposComponent></CamposComponent>
+    @if (Produto.Campos != null)
+    {
+        @foreach (var item in Produto.Campos)
+        {
+            <CamposComponent OnCampoDeleted="EmployeeDeleted" Campo="@item"></CamposComponent>
+
+        }
+    }
 
     <hr />
-    <button class="c-btn__tertiary">
+    <button class="c-btn__tertiary" @onclick="AddItem">
         +
         <span>Adicionar campo</span>
     </button>
@@ -61,11 +69,23 @@
 
     protected ProdutoModel Produto = new ProdutoModel();
 
-    protected List<ProdutoModel>? Produtos = new List<ProdutoModel>();
+    [Inject]
+    public ICampoService CampoService { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         await GetProduto("0MHUxGuthSK5TecioMwu");
+
+        if (Produto.Campos == null)
+        {
+            CampoService.CreateListCampo(new List<CampoModel>() { new CampoModel() { Opcoes = new List<string>() } });
+            Produto.Campos = await CampoService.GetCampos();
+        }
+        else
+        {
+            CampoService.CreateListCampo(Produto.Campos);
+        }
+
     }
 
     protected async Task GetProduto(string id)
@@ -73,17 +93,16 @@
         Produto = await Http.GetFromJsonAsync<ProdutoModel>("Produto/" + id);
     }
 
-    public void Enter(KeyboardEventArgs e)
+    protected void AddItem()
     {
-        if (e.Code == "Enter" || e.Code == "NumpadEnter")
-        {
-            values.Add(Texto);
-            Texto = "";
-        }
+        CampoService.InsertCampo(new CampoModel() { Opcoes = new List<string?>() });
     }
 
     protected async Task EmployeeDeleted()
     {
-        Employees = (await EmployeeService.GetEmployees()).ToList();
+        Produto.Campos = await CampoService.GetCampos();
     }
+
+
+
 }

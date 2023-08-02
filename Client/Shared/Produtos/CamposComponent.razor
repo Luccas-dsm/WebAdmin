@@ -4,14 +4,14 @@
     <div class="c-character">
         <div class="c-form__field">
             <label class="c-form__label" for="">Nome do campo</label>
-            <input class="c-form__input" type="text" id="">
+            <input class="c-form__input" type="text" id="" @bind="@Campo.Input">
         </div>
         <div class="c-form__field">
             <label class="c-form__label" for="">Informativo</label>
-            <input class="c-form__input" type="text" id="">
+            <input class="c-form__input" type="text" id="" @bind="@Campo.Informativo">
         </div>
         <div class="c-checkbox__group">
-            <input class="c-checkbox" id="c-check" type="checkbox">
+            <input class="c-checkbox" id="c-check" type="checkbox" @bind="@Campo.Obrigatorio">
             <label class="c-form__label" for="c-check">Campo obrigatório</label>
         </div>
     </div>
@@ -20,9 +20,13 @@
         <input class="c-form__input" type="text" id="" @bind="@NovaOpcao" @onkeyup="@Enter">
 
         <MudChipSet AllClosable="true" OnClose="Closed">
-            @foreach (var value in ListaOpcoes)
+            @if (Campo.Opcoes.Count() > 0)
             {
-                <MudChip Text="@value" Color="Color.Primary"></MudChip>
+                @foreach (var value in Campo.Opcoes)
+                {
+                    <MudChip Text="@value" Color="Color.Primary"></MudChip>
+                }
+
             }
         </MudChipSet>
     </div>
@@ -33,37 +37,32 @@
 </div>
 
 @code {
+
     public string NovaOpcao { get; set; }
-    List<string> ListaOpcoes = new List<string>();
-    
-    [Parameter]
-    public EventCallback<int> OnEmployeeDeleted { get; set; }
 
     [Parameter]
-    public int Posicao { get; set; }
+    public EventCallback<CampoModel> OnCampoDeleted { get; set; }
+
+    [Parameter]
+    public CampoModel Campo { get; set; }
 
     [Inject]
     public ICampoService CampoService { get; set; }
 
-
-    protected override async Task OnInitializedAsync()
+    protected async Task Delete_Click()
     {
-        
-    }
-
-    protected void Delete_Click()
-    {
-         CampoService.DeleteCampo(Posicao);
+        CampoService.DeleteCampo(Campo);
+        await OnCampoDeleted.InvokeAsync(Campo);
     }
 
     public void Enter(KeyboardEventArgs e)
     {
         if (e.Code == "Enter" || e.Code == "NumpadEnter")
         {
-            ListaOpcoes.Add(NovaOpcao);
+            Campo.Opcoes.Add(NovaOpcao);
             NovaOpcao = "";
         }
     }
 
-    public void Closed(MudChip chip) => ListaOpcoes.Remove(chip.Text);
+    public void Closed(MudChip chip) => Campo.Opcoes.Remove(chip.Text);
 }
