@@ -6,15 +6,15 @@ namespace WebAdmin.DataAccess.DomainServices
 {
     public class ProdutoDataAccess
     {
-        private static Access fireStore = new Access("genesis-93f18");
-        private static string Buket = "genesis-93f18.appspot.com";
-
+        private static Access FireStore { get { return new Access("genesis-93f18"); }  }
+        private static string NomeTabela { get { return "Produtos"; }  }
+        private static string Buket { get { return "genesis-93f18.appspot.com"; }  }
 
         public static async Task<List<ProdutoModel>> GetProdutosSelect(List<string> listaSeqs)
         {
             List<ProdutoModel> lstProduto = new List<ProdutoModel>();
             // Consultar os produtos no Firestore
-            Query query = fireStore.AcessoBaseFireStore().Collection("produto")
+            Query query = FireStore.AcessoBaseFireStore().Collection(NomeTabela)
                 .WhereIn(FieldPath.DocumentId, listaSeqs);
 
             QuerySnapshot querySnapshot = query.GetSnapshotAsync().Result;
@@ -37,11 +37,10 @@ namespace WebAdmin.DataAccess.DomainServices
         public static async Task<List<ProdutoModel>> GetAllProdutos()
         {
 
-
-            //var produtos =  fireStore.AcessoBaseFireStore().Collection("produto").WhereIn(FieldPath.DocumentId, lista);
+           
             try
             {
-                Query produtoQuery = fireStore.AcessoBaseFireStore().Collection("produto");
+                Query produtoQuery = FireStore.AcessoBaseFireStore().Collection(NomeTabela);
                 QuerySnapshot produtoQuerySnapshot = await produtoQuery.GetSnapshotAsync();
                 List<ProdutoModel> lstProduto = new List<ProdutoModel>();
 
@@ -60,9 +59,10 @@ namespace WebAdmin.DataAccess.DomainServices
                 List<ProdutoModel> ListaOrdenada = lstProduto.OrderBy(x => x.Nome).ToList();
                 return ListaOrdenada;
             }
-            catch
+            catch (Exception ex)
             {
-                throw;
+                Exception exception = new Exception(message: "Erro ao buscar os produtos." + ex.Message);
+                throw exception;
             }
         }
         public static async void AddProduto(ProdutoModel produto)
@@ -74,16 +74,17 @@ namespace WebAdmin.DataAccess.DomainServices
                     imagem.Url = SalvaArquivoStorage(imagem, Buket);
                 }
             }
-
+(using UnitofWork)
             try
             {
 
-                CollectionReference colRef = fireStore.AcessoBaseFireStore().Collection("produto");
+                CollectionReference colRef = FireStore.AcessoBaseFireStore().Collection(NomeTabela);
                 await colRef.AddAsync(produto);
             }
-            catch
+            catch (Exception ex)
             {
-                throw;
+                Exception exception = new Exception(message: "Erro ao buscar adicionar." + ex.Message);
+                throw exception;
             }
         }
         public static async void UpdateProduto(ProdutoModel produto)
@@ -100,22 +101,21 @@ namespace WebAdmin.DataAccess.DomainServices
 
             try
             {
-                DocumentReference docRef = fireStore.AcessoBaseFireStore().Collection("produto").Document(produto.Id);
+                DocumentReference docRef = FireStore.AcessoBaseFireStore().Collection(NomeTabela).Document(produto.Id);
                 await docRef.SetAsync(produto, SetOptions.Overwrite);
             }
-            catch
+            catch (Exception ex)
             {
-                throw;
+                Exception exception = new Exception(message: "Erro ao atualizar o produtos." + ex.Message);
+                throw exception;
             }
         }
         public static async Task<ProdutoModel> GetProduto(string id)
         {
-
-
             try
             {
 
-                DocumentReference docRef = fireStore.AcessoBaseFireStore().Collection("produto").Document(id);
+                DocumentReference docRef = FireStore.AcessoBaseFireStore().Collection(NomeTabela).Document(id);
                 DocumentSnapshot snapshot = await docRef.GetSnapshotAsync();
 
                 if (snapshot.Exists)
@@ -129,21 +129,23 @@ namespace WebAdmin.DataAccess.DomainServices
                     return new ProdutoModel();
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                throw;
+                Exception exception = new Exception(message: "Erro ao buscar o produto." + ex.Message);
+                throw exception;
             }
         }
         public static async void DeleteProduto(string id)
         {
             try
             {
-                DocumentReference produtoRef = fireStore.AcessoBaseFireStore().Collection("produto").Document(id);
+                DocumentReference produtoRef = FireStore.AcessoBaseFireStore().Collection(NomeTabela).Document(id);
                 await produtoRef.DeleteAsync();
             }
-            catch
+            catch (Exception ex)
             {
-                throw;
+                Exception exception = new Exception(message: "Erro ao deletar os produto." + ex.Message);
+                throw exception;
             }
         }
         public static string SalvaArquivoStorage(ArquivoModel arquivo, string buket)
@@ -153,7 +155,7 @@ namespace WebAdmin.DataAccess.DomainServices
                 string url = "";
                 using (var stream = new MemoryStream(arquivo.Conteudo))
                 {
-                    var retorno = fireStore.AcessoBaseStorage().UploadObject(buket, arquivo.Nome, arquivo.Tipo, stream);
+                    var retorno = FireStore.AcessoBaseStorage().UploadObject(buket, arquivo.Nome, arquivo.Tipo, stream);
 
                     string[] sp = retorno.Id.Split('/');
 
@@ -168,7 +170,8 @@ namespace WebAdmin.DataAccess.DomainServices
             }
             catch (Exception ex)
             {
-                throw new Exception("Houve um erro ao salvar o arquivo no storage do fire base, código do erro:" + ex.Message);
+                Exception exception = new Exception(message: "Houve um erro ao salvar o arquivo no storage do fire base, código do erro:" + ex.Message);
+                throw exception;
             }
         }
     }

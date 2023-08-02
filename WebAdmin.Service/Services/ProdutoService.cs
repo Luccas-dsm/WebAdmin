@@ -8,7 +8,7 @@ namespace WebAdmin.Service.Services
     {
 
         public Task<List<ProdutoModel>> GetAllProdutos()
-        { 
+        {
             return ProdutoDataAccess.GetAllProdutos();
         }
 
