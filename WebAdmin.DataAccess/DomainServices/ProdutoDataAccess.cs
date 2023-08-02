@@ -74,7 +74,6 @@ namespace WebAdmin.DataAccess.DomainServices
                     imagem.Url = SalvaArquivoStorage(imagem, Buket);
                 }
             }
-(using UnitofWork)
             try
             {
 
