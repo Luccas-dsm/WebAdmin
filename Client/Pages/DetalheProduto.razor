@@ -1,5 +1,7 @@
 ﻿@page "/detalhe-produto"
-
+@using WebAdmin.Client.Shared.Produtos
+@using WebAdmin.Shared.Models;
+@inject HttpClient Http
 
 <h1>Detalhe do produto</h1>
 
@@ -7,20 +9,16 @@
     <h2 class="c-container__title">Informações básicas</h2>
 
     <div class="c-group">
-        <form class="c-group__item">
+        <div class="c-group__item">
             <div class="c-form__field">
                 <label class="c-form__label" for="">Nome do Produto</label>
-                <input class="c-form__input" type="text" id="">
+                <input class="c-form__input" type="text" id="" @bind="@Produto.Nome">
             </div>
             <div class="c-form__field">
                 <label class="c-form__label" for="">Descrição</label>
-                <textarea class="c-form__textarea" type="text" id=""></textarea>
+                <textarea class="c-form__textarea" type="text" id="" @bind="@Produto.Descricao"></textarea>
             </div>
-            <div class="c-form__field">
-                <label class="c-form__label" for="">Palavras-chave</label>
-                <input class="c-form__input" type="text" id="">
-            </div>
-        </form>
+        </div>
 
         <div class="c-images c-group__item">
             <div class="c-images__item">
@@ -38,57 +36,38 @@
 <div class="c-container">
     <h2 class="c-container__title">Características que deverão ser selecionadas pelo usuário</h2>
 
-    <form class="c-group__item c-character">
-        <div class="c-form__field">
-            <label class="c-form__label" for="">Nome do campo</label>
-            <input class="c-form__input" type="text" id="">
-        </div>
-        <div class="c-form__field">
-            <label class="c-form__label" for="">Informativo</label>
-            <input class="c-form__input" type="text" id="">
-        </div>
-        <div class="c-form__field">
-            <label class="c-form__label" for="">Opções disponíveis</label>
-            <input class="c-form__input" type="text" id="">
-        </div>
-        <div class="c-checkbox__group">
-            <input class="c-checkbox" id="c-check" type="checkbox">
-            <label class="c-form__label" for="c-check">Campo obrigatório</label>
-        </div>
-        <button class="c-btn__tertiary-danger">
-            X
-            <span>Remover campo</span>
-        </button>   
-    </form>
-
-    <br />
-    <hr />
-    <br />
-
-    <form class="c-group__item c-character">
-        <div class="c-form__field">
-            <label class="c-form__label" for="">Nome do campo</label>
-            <input class="c-form__input" type="text" id="">
-        </div>
-        <div class="c-form__field">
-            <label class="c-form__label" for="">Informativo</label>
-            <input class="c-form__input" type="text" id="">
+    <div class="c-group__item">
+        <div class="c-character">
+            <div class="c-form__field">
+                <label class="c-form__label" for="">Nome do campo</label>
+                <input class="c-form__input" type="text" id="">
+            </div>
+            <div class="c-form__field">
+                <label class="c-form__label" for="">Informativo</label>
+                <input class="c-form__input" type="text" id="">
+            </div>
+            <div class="c-checkbox__group">
+                <input class="c-checkbox" id="c-check" type="checkbox">
+                <label class="c-form__label" for="c-check">Campo obrigatório</label>
+            </div>
         </div>
         <div class="c-form__field">
             <label class="c-form__label" for="">Opções disponíveis</label>
-            <input class="c-form__input" type="text" id="">
-        </div>
-        <div class="c-checkbox__group">
-            <input class="c-checkbox" id="c-check" type="checkbox">
-            <label class="c-form__label" for="c-check">Campo obrigatório</label>
+            <input class="c-form__input" type="text" id="" @bind="@Texto" @onkeyup="@Enter">
+
+            <MudChipSet AllClosable="true" OnClose="Closed">
+                @foreach (var value in values)
+                {
+                    <MudChip Text="@value" Color="Color.Primary"></MudChip>
+                }
+            </MudChipSet>
         </div>
         <button class="c-btn__tertiary-danger">
             X
             <span>Remover campo</span>
         </button>
-    </form>
+    </div>
 
-    <br />
     <hr />
     <button class="c-btn__tertiary">
         +
@@ -104,12 +83,32 @@
     </button>
 </div>
 
+@code {
+    public string Texto { get; set; }
+    int i = 1;
+    List<string> values = new List<string>();
+    public void Closed(MudChip chip) => values.Remove(chip.Text);
 
-<MudField Label="Example with RadioGroup" Variant="Variant.Outlined" InnerPadding="true">
-    <MudChip Disabled="true" Color="Color.Secondary">Secondary</MudChip>
-    <MudChip Disabled="true" Color="Color.Info">Info</MudChip>
-</MudField>
+    protected ProdutoModel Produto = new ProdutoModel();
 
-<MudItem xs="12" sm="6" md="4">
-    <MudField Label="Filled" Variant="Variant.Filled" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Money"></MudField>
-</MudItem>
+    protected List<ProdutoModel>? Produtos = new List<ProdutoModel>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetProduto("0MHUxGuthSK5TecioMwu");
+    }
+
+    protected async Task GetProduto(string id)
+    {
+        Produto = await Http.GetFromJsonAsync<ProdutoModel>("Produto/" + id);
+    }
+
+    public void Enter(KeyboardEventArgs e)
+    {
+        if (e.Code == "Enter" || e.Code == "NumpadEnter")
+        {
+            values.Add(Texto);
+            Texto = "";
+        }
+    }
+}

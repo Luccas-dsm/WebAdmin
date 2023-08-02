@@ -50,6 +50,7 @@
   font-weight: 500;
   gap: 8px;
   border: none;
+  padding: 0;
   background-color: transparent;
   color: #10435C;
 }
