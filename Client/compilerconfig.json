@@ -34,5 +34,9 @@
   {
     "outputFile": "wwwroot/css/styles/base/components/checkbox.css",
     "inputFile": "wwwroot/css/styles/base/components/checkbox.scss"
+  },
+  {
+    "outputFile": "Shared/Produtos/CamposComponent.razor.css",
+    "inputFile": "Shared/Produtos/CamposComponent.razor.scss"
   }
 ]

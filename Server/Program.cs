@@ -1,7 +1,3 @@
-using Microsoft.AspNetCore.ResponseCompression;
-using WebAdmin.Service.Interfaces;
-using WebAdmin.Service.Services;
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.

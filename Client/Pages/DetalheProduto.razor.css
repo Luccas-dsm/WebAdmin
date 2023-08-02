@@ -43,11 +43,3 @@
 .c-checkbox__group * {
   font-size: 16px;
 }
-
-.c-character {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 0 24px;
-}

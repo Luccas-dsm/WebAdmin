@@ -36,37 +36,7 @@
 <div class="c-container">
     <h2 class="c-container__title">Características que deverão ser selecionadas pelo usuário</h2>
 
-    <div class="c-group__item">
-        <div class="c-character">
-            <div class="c-form__field">
-                <label class="c-form__label" for="">Nome do campo</label>
-                <input class="c-form__input" type="text" id="">
-            </div>
-            <div class="c-form__field">
-                <label class="c-form__label" for="">Informativo</label>
-                <input class="c-form__input" type="text" id="">
-            </div>
-            <div class="c-checkbox__group">
-                <input class="c-checkbox" id="c-check" type="checkbox">
-                <label class="c-form__label" for="c-check">Campo obrigatório</label>
-            </div>
-        </div>
-        <div class="c-form__field">
-            <label class="c-form__label" for="">Opções disponíveis</label>
-            <input class="c-form__input" type="text" id="" @bind="@Texto" @onkeyup="@Enter">
-
-            <MudChipSet AllClosable="true" OnClose="Closed">
-                @foreach (var value in values)
-                {
-                    <MudChip Text="@value" Color="Color.Primary"></MudChip>
-                }
-            </MudChipSet>
-        </div>
-        <button class="c-btn__tertiary-danger">
-            X
-            <span>Remover campo</span>
-        </button>
-    </div>
+    <CamposComponent></CamposComponent>
 
     <hr />
     <button class="c-btn__tertiary">
@@ -110,5 +80,10 @@
             values.Add(Texto);
             Texto = "";
         }
+    }
+
+    protected async Task EmployeeDeleted()
+    {
+        Employees = (await EmployeeService.GetEmployees()).ToList();
     }
 }

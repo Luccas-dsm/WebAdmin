@@ -1,0 +1,69 @@
+﻿@using WebAdmin.Client.Services.Interfaces;
+@using WebAdmin.Shared.Models;
+<div class="c-group__item">
+    <div class="c-character">
+        <div class="c-form__field">
+            <label class="c-form__label" for="">Nome do campo</label>
+            <input class="c-form__input" type="text" id="">
+        </div>
+        <div class="c-form__field">
+            <label class="c-form__label" for="">Informativo</label>
+            <input class="c-form__input" type="text" id="">
+        </div>
+        <div class="c-checkbox__group">
+            <input class="c-checkbox" id="c-check" type="checkbox">
+            <label class="c-form__label" for="c-check">Campo obrigatório</label>
+        </div>
+    </div>
+    <div class="c-form__field">
+        <label class="c-form__label" for="">Opções disponíveis</label>
+        <input class="c-form__input" type="text" id="" @bind="@NovaOpcao" @onkeyup="@Enter">
+
+        <MudChipSet AllClosable="true" OnClose="Closed">
+            @foreach (var value in ListaOpcoes)
+            {
+                <MudChip Text="@value" Color="Color.Primary"></MudChip>
+            }
+        </MudChipSet>
+    </div>
+    <button class="c-btn__tertiary-danger" @onclick="Delete_Click">
+        X
+        <span>Remover campo</span>
+    </button>
+</div>
+
+@code {
+    public string NovaOpcao { get; set; }
+    List<string> ListaOpcoes = new List<string>();
+    
+    [Parameter]
+    public EventCallback<int> OnEmployeeDeleted { get; set; }
+
+    [Parameter]
+    public int Posicao { get; set; }
+
+    [Inject]
+    public ICampoService CampoService { get; set; }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        
+    }
+
+    protected void Delete_Click()
+    {
+         CampoService.DeleteCampo(Posicao);
+    }
+
+    public void Enter(KeyboardEventArgs e)
+    {
+        if (e.Code == "Enter" || e.Code == "NumpadEnter")
+        {
+            ListaOpcoes.Add(NovaOpcao);
+            NovaOpcao = "";
+        }
+    }
+
+    public void Closed(MudChip chip) => ListaOpcoes.Remove(chip.Text);
+}
