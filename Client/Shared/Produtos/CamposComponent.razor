@@ -1,4 +1,4 @@
-﻿@using WebAdmin.Client.Services.Interfaces;
+﻿@using WebAdmin.Shared.Enums;
 @using WebAdmin.Shared.Models;
 <div class="c-group__item">
     <div class="c-character">
@@ -30,7 +30,7 @@
             }
         </MudChipSet>
     </div>
-    <button class="c-btn__tertiary-danger" @onclick="Delete_Click">
+    <button class="c-btn__tertiary-danger" @onclick="(() => OnRemoverCampo.InvokeAsync(Campo))">
         X
         <span>Remover campo</span>
     </button>
@@ -41,19 +41,10 @@
     public string NovaOpcao { get; set; }
 
     [Parameter]
-    public EventCallback<CampoModel> OnCampoDeleted { get; set; }
+    public EventCallback<CampoModel> OnRemoverCampo { get; set; }
 
     [Parameter]
     public CampoModel Campo { get; set; }
-
-    [Inject]
-    public ICampoService CampoService { get; set; }
-
-    protected async Task Delete_Click()
-    {
-        CampoService.DeleteCampo(Campo);
-        await OnCampoDeleted.InvokeAsync(Campo);
-    }
 
     public void Enter(KeyboardEventArgs e)
     {

@@ -1,6 +1,6 @@
 ﻿@page "/detalhe-produto"
-@using WebAdmin.Client.Services.Interfaces;
 @using WebAdmin.Client.Shared.Produtos
+@using WebAdmin.Shared.Enums;
 @using WebAdmin.Shared.Models;
 @inject HttpClient Http
 
@@ -41,7 +41,7 @@
     {
         @foreach (var item in Produto.Campos)
         {
-            <CamposComponent OnCampoDeleted="EmployeeDeleted" Campo="@item"></CamposComponent>
+            <CamposComponent OnRemoverCampo="RemoverCampo" Campo="@item"></CamposComponent>
 
         }
     }
@@ -69,23 +69,14 @@
 
     protected ProdutoModel Produto = new ProdutoModel();
 
-    [Inject]
-    public ICampoService CampoService { get; set; }
-
     protected override async Task OnInitializedAsync()
     {
         await GetProduto("0MHUxGuthSK5TecioMwu");
 
         if (Produto.Campos == null)
         {
-            CampoService.CreateListCampo(new List<CampoModel>() { new CampoModel() { Opcoes = new List<string>() } });
-            Produto.Campos = await CampoService.GetCampos();
+            Produto.Campos = new List<CampoModel>() { new CampoModel() { Opcoes = new List<string>() } };
         }
-        else
-        {
-            CampoService.CreateListCampo(Produto.Campos);
-        }
-
     }
 
     protected async Task GetProduto(string id)
@@ -95,14 +86,11 @@
 
     protected void AddItem()
     {
-        CampoService.InsertCampo(new CampoModel() { Opcoes = new List<string?>() });
+        Produto.Campos.Add(new CampoModel() { Opcoes = new List<string?>() });
     }
 
-    protected async Task EmployeeDeleted()
+    protected void RemoverCampo(CampoModel campo)
     {
-        Produto.Campos = await CampoService.GetCampos();
+        Produto.Campos.Remove(campo);      
     }
-
-
-
 }
