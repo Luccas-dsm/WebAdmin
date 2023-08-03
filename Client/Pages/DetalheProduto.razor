@@ -22,14 +22,15 @@
         </div>
 
         <div class="c-images c-group__item">
-            <div class="c-images__item">
-            </div>
-            <div class="c-images__item">
-            </div>
-            <div class="c-images__item">
-            </div>
-            <div class="c-images__item">
-            </div>
+            @foreach (var index in Enumerable.Range(0, 4))
+            {
+                <div class="c-images__item">
+                    <label for=@("imagem-" + index)>
+                        <img class="c-images__preview" src=@( String.IsNullOrEmpty(selectedImages[index]) ? $"assets\\images\\imagem_padrao_{index + 1}.png" : selectedImages[index]) />
+                    </label>
+                    <InputFile hidden="true" type="file" id=@("imagem-" + index) OnChange="(e) => SelecionarImagem(e, index)" />
+                </div>
+            }
         </div>
     </div>
 </div>
@@ -42,7 +43,6 @@
         @foreach (var item in Produto.Campos)
         {
             <CamposComponent OnRemoverCampo="RemoverCampo" Campo="@item"></CamposComponent>
-
         }
     }
 
@@ -69,6 +69,8 @@
 
     protected ProdutoModel Produto = new ProdutoModel();
 
+    private string[] selectedImages = new string[4];
+
     protected override async Task OnInitializedAsync()
     {
         await GetProduto("0MHUxGuthSK5TecioMwu");
@@ -91,6 +93,18 @@
 
     protected void RemoverCampo(CampoModel campo)
     {
-        Produto.Campos.Remove(campo);      
+        Produto.Campos.Remove(campo);
+    }
+
+    private async Task SelecionarImagem(InputFileChangeEventArgs e, int index)
+    {
+        var file = e.File;
+        var buffer = new byte[file.Size];
+
+        await file.OpenReadStream().ReadAsync(buffer);
+
+        // Pode armazenar o buffer em uma base de dados ou fazer o que desejar com ele.
+        // Aqui, estamos apenas convertendo para base64 e exibindo na tela.
+        selectedImages[index] = $"data:{file.ContentType};base64,{Convert.ToBase64String(buffer)}";
     }
 }

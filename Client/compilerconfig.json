@@ -38,5 +38,9 @@
   {
     "outputFile": "Shared/Produtos/CamposComponent.razor.css",
     "inputFile": "Shared/Produtos/CamposComponent.razor.scss"
+  },
+  {
+    "outputFile": "Shared/MainLayout.razor.css",
+    "inputFile": "Shared/MainLayout.razor.scss"
   }
 ]
