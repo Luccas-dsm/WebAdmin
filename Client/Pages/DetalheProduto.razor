@@ -54,7 +54,7 @@
     <button class="c-btn__secondary-danger">
         <span>Cancelar</span>
     </button>
-    <button class="c-btn__primary">
+    <button class="c-btn__primary" @onclick="@Onsubmit">
         <span>Salvar alterações</span>
     </button>
 </div>
@@ -105,4 +105,23 @@
         // Aqui, estamos apenas convertendo para base64 e exibindo na tela.
         selectedImages[index] = $"data:{file.ContentType};base64,{Convert.ToBase64String(buffer)}";
     }
+    protected async Task Onsubmit()
+    {
+        HttpResponseMessage save;
+
+        if (string.IsNullOrEmpty(Produto.Id))
+        {
+            save = await Http.PostAsJsonAsync("Produto", this.Produto);
+        }
+        else
+        {
+            save = await Http.PutAsJsonAsync("Produto", this.Produto);
+        }
+
+        if (!save.IsSuccessStatusCode)
+        {
+            throw new Exception("Ocorreu um erro ao salvar, verifique os campos e tente novamente. " + save.StatusCode);
+        }
+    }
+
 }

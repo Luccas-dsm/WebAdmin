@@ -1,13 +1,53 @@
 ﻿@inherits LayoutComponentBase
+@inject ISnackbar Snackbar
 
 <div class="page">
     <div class="sidebar">
         <NavMenu />
     </div>
 
-    <main>
-        <article class="content p-4">
-            @Body
-        </article>
-    </main>
+    <ErrorBoundary @ref="_errorBoundary">
+        <ChildContent>
+
+            <main>
+                <article class="content p-4">
+                    @Body
+                </article>
+            </main>
+
+        </ChildContent>
+        <ErrorContent Context="Exception">
+
+            <div>
+                @Exception.GetType()
+                @Exception.Message
+                <button @onclick="(()=> _errorBoundary.Recover())">X</button>
+            </div>
+
+        </ErrorContent>
+    </ErrorBoundary>
 </div>
+
+@code{
+
+    private ErrorBoundary _errorBoundary { get; set; }
+    private bool showCallAlert = true;
+
+    protected override void OnInitialized()
+    {
+        _errorBoundary = new ErrorBoundary();
+    }
+    private void CloseMe(bool value)
+    {
+        if (value)
+        {
+            showCallAlert = false;
+        }
+    }
+    private void AddSnac(string message, Severity sv)
+    {
+        Snackbar.Configuration.MaxDisplayedSnackbars = 10;
+        Snackbar.Add(message, sv);
+    }
+
+}
