@@ -65,7 +65,7 @@ namespace WebAdmin.DataAccess.DomainServices
                 throw exception;
             }
         }
-        public static async void AddProduto(ProdutoModel produto)
+        public static async Task AddProduto(ProdutoModel produto)
         {
             if (produto.Imagem != null && produto.Imagem.Count() > 0)
             {
@@ -86,10 +86,10 @@ namespace WebAdmin.DataAccess.DomainServices
                 throw exception;
             }
         }
-        public static async void UpdateProduto(ProdutoModel produto)
+        public static async Task UpdateProduto(ProdutoModel produto)
         {
 
-            if (produto.Imagem.Count() > 0)
+            if (produto.Imagem!= null && produto.Imagem.Count() > 0)
             {
                 foreach (var imagem in produto.Imagem)
                 {
@@ -134,7 +134,7 @@ namespace WebAdmin.DataAccess.DomainServices
                 throw exception;
             }
         }
-        public static async void DeleteProduto(string id)
+        public static async Task DeleteProduto(string id)
         {
             try
             {

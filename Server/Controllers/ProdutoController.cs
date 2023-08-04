@@ -21,25 +21,29 @@ namespace WebAdmin.Server.Controllers
         {
             return await _produtoService.GetAllProdutos();
         }
+
         [HttpGet("{id}")]
         public async Task<ProdutoModel> Get(string id)
         {
             return await _produtoService.GetProduto(id);
         }
+
         [HttpPost]
-        public void Post([FromBody] ProdutoModel produto)
+        public Task Post([FromBody] ProdutoModel produto)
         {
-            _produtoService.AddProduto(produto);
+           return _produtoService.AddProduto(produto);
         }
+
         [HttpPut]
-        public void Put([FromBody] ProdutoModel produto)
+        public Task Put([FromBody] ProdutoModel produto)
         {
-            _produtoService.UpdateProduto(produto);
+            return _produtoService.UpdateProduto(produto);
         }
+
         [HttpDelete("{id}")]
-        public void Delete(string id)
+        public Task Delete(string id)
         {
-            _produtoService.DeleteProduto(id);
+           return _produtoService.DeleteProduto(id);
         }
     }
 }

@@ -12,9 +12,9 @@ namespace WebAdmin.Service.Services
             return ProdutoDataAccess.GetAllProdutos();
         }
 
-        public void UpdateProduto(ProdutoModel produto)
+        public Task UpdateProduto(ProdutoModel produto)
         {
-            ProdutoDataAccess.UpdateProduto(produto);
+            return ProdutoDataAccess.UpdateProduto(produto);
         }
 
         public Task<ProdutoModel> GetProduto(string id)
@@ -22,14 +22,16 @@ namespace WebAdmin.Service.Services
             return ProdutoDataAccess.GetProduto(id);
         }
 
-        public void DeleteProduto(string id)
+        public Task DeleteProduto(string id)
         {
-            ProdutoDataAccess.DeleteProduto(id);
+           return ProdutoDataAccess.DeleteProduto(id);
         }
 
-        public void AddProduto(ProdutoModel produto)
+        public Task AddProduto(ProdutoModel produto)
         {
-            ProdutoDataAccess.AddProduto(produto);
+           return ProdutoDataAccess.AddProduto(produto);
         }
+
+   
     }
 }
