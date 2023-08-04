@@ -24,12 +24,10 @@
         <div class="c-images c-group__item">
             @foreach (var index in Enumerable.Range(0, 4))
             {
-                <div class="c-images__item">
-                    <label for=@("imagem-" + index)>
-                        <img class="c-images__preview" src=@( String.IsNullOrEmpty(selectedImages[index]) ? $"assets\\images\\imagem_padrao_{index + 1}.png" : selectedImages[index]) />
-                    </label>
-                    <InputFile hidden="true" type="file" id=@("imagem-" + index) OnChange="(e) => SelecionarImagem(e, index)" />
-                </div>
+                <label class="c-images__item" for=@("imagem-" + index)>
+                    <img class="c-images__preview" src=@( String.IsNullOrEmpty(selectedImages[index]) ? $"assets\\images\\imagem_padrao_{index + 1}.png" : selectedImages[index]) />
+                </label>
+                <InputFile hidden="true" type="file" id=@("imagem-" + index) OnChange="(e) => SelecionarImagem(e, index)" />
             }
         </div>
     </div>
