@@ -32,6 +32,5 @@ namespace WebAdmin.Service.Services
            return ProdutoDataAccess.AddProduto(produto);
         }
 
-   
     }
 }

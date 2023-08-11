@@ -1,6 +1,10 @@
-﻿using Google.Apis.Auth.OAuth2;
+﻿using Firebase.Storage;
+using Google.Apis.Auth.OAuth2;
 using Google.Cloud.Firestore;
+using Google.Cloud.Firestore.V1;
 using Google.Cloud.Storage.V1;
+using static Google.Cloud.Firestore.V1.StructuredQuery.Types;
+
 namespace WebAdmin.DataAccess
 {
     public class Access
@@ -23,6 +27,12 @@ namespace WebAdmin.DataAccess
         {
             return StorageClient.Create(GoogleCredential.FromFile(JsonPath()));
         }
+
+        public FirebaseStorage FireStore()
+        {
+            return  new FirebaseStorage(JsonPath());
+        }
+
 
         private string JsonPath() =>  "../WebAdmin.DataAccess/Access/genesis-93f18-firebase-adminsdk-j2gxw-f50f8eb355.json";
 

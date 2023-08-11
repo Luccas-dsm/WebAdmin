@@ -13,11 +13,11 @@
         <div class="c-group__item">
             <div class="c-form__field">
                 <label class="c-form__label" for="">Nome do Produto</label>
-                <input class="c-form__input" type="text" id="" @bind="@Produto.Nome">
+                <input class="c-form__input" type="text" id="" @bind="@Produto.Nome" required>
             </div>
             <div class="c-form__field">
                 <label class="c-form__label" for="">Descrição</label>
-                <textarea class="c-form__textarea" type="text" id="" @bind="@Produto.Descricao"></textarea>
+                <textarea class="c-form__textarea" type="text" id="" @bind="@Produto.Descricao" required></textarea>
             </div>
         </div>
 
@@ -26,7 +26,7 @@
             {
                 <div class="c-images__item">
                     <label for=@("imagem-" + index)>
-                        <img class="c-images__preview" src=@( String.IsNullOrEmpty(selectedImages[index]) ? $"assets\\images\\imagem_padrao_{index + 1}.png" : selectedImages[index]) />
+                        <img class="c-images__preview" src=@(ExibeImagem(index)) />
                     </label>
                     <InputFile hidden="true" type="file" id=@("imagem-" + index) OnChange="(e) => SelecionarImagem(e, index)" />
                 </div>
@@ -44,6 +44,7 @@
         {
             <CamposComponent OnRemoverCampo="RemoverCampo" Campo="@item"></CamposComponent>
         }
+
     }
 
     <hr />
@@ -63,21 +64,29 @@
 
 @code {
     public string Texto { get; set; }
-    int i = 1;
+
+
     List<string> values = new List<string>();
     public void Closed(MudChip chip) => values.Remove(chip.Text);
 
-    protected ProdutoModel Produto = new ProdutoModel();
+    protected ProdutoModel Produto = new ProdutoModel() { Imagem = new List<ArquivoModel?> { new ArquivoModel() { } } };
 
     private string[] selectedImages = new string[4];
 
     protected override async Task OnInitializedAsync()
     {
+
         await GetProduto("0MHUxGuthSK5TecioMwu");
 
-        if (Produto.Campos == null)
+        if (Produto.Campos == null || Produto.Imagem == null)
         {
             Produto.Campos = new List<CampoModel>() { new CampoModel() { Opcoes = new List<string>() } };
+            Produto.Imagem = new List<ArquivoModel?>();
+
+            for (int i = 0; i < 4; i++)
+            {
+                Produto.Imagem.Add(new ArquivoModel());
+            }
         }
     }
 
@@ -96,6 +105,44 @@
         Produto.Campos.Remove(campo);
     }
 
+    //private async Task SelecionarImagem(InputFileChangeEventArgs e, int index)
+    //{
+    //    var file = e.File;
+    //    var buffer = new byte[file.Size];
+
+    //    await file.OpenReadStream().ReadAsync(buffer);
+
+    //    // Pode armazenar o buffer em uma base de dados ou fazer o que desejar com ele.
+    //    // Aqui, estamos apenas convertendo para base64 e exibindo na tela.
+    //    selectedImages[index] = $"data:{file.ContentType};base64,{Convert.ToBase64String(buffer)}";
+
+
+    //}
+
+    private string ExibeImagem(int index)
+    {
+
+        string retorno = $"assets\\images\\imagem_padrao_{index + 1}.png";
+        try
+        {
+            if (Produto.Imagem[index].Conteudo != null)
+            {
+                retorno = $"data:{Produto.Imagem[index].Tipo};base64,{Convert.ToBase64String(Produto.Imagem[index].Conteudo)}";
+            }
+            else if (!string.IsNullOrEmpty(Produto.Imagem[index].Url))
+            {
+                retorno = Produto.Imagem[index].Url;
+            }
+
+            return retorno;
+        }
+        catch
+        {
+            return retorno;
+        }
+    }
+
+
     private async Task SelecionarImagem(InputFileChangeEventArgs e, int index)
     {
         var file = e.File;
@@ -105,8 +152,14 @@
 
         // Pode armazenar o buffer em uma base de dados ou fazer o que desejar com ele.
         // Aqui, estamos apenas convertendo para base64 e exibindo na tela.
-        selectedImages[index] = $"data:{file.ContentType};base64,{Convert.ToBase64String(buffer)}";
+
+        Produto.Imagem[index].Tipo = file.ContentType;
+        Produto.Imagem[index].Conteudo = buffer;
+        Produto.Imagem[index].Nome = $"Imagem - {index}";
+
+
     }
+
     protected async Task Onsubmit()
     {
         HttpResponseMessage save;
@@ -125,5 +178,8 @@
             throw new Exception("Ocorreu um erro ao salvar, verifique os campos e tente novamente. " + save.StatusCode);
         }
     }
+
+
+
 
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using WebAdmin.DataAccess.DomainServices;
 using WebAdmin.Service;
 using WebAdmin.Service.Interfaces;
 using WebAdmin.Service.Services;
@@ -31,7 +32,7 @@ namespace WebAdmin.Server.Controllers
         [HttpPost]
         public Task Post([FromBody] ProdutoModel produto)
         {
-           return _produtoService.AddProduto(produto);
+            return _produtoService.AddProduto(produto);
         }
 
         [HttpPut]
@@ -45,5 +46,6 @@ namespace WebAdmin.Server.Controllers
         {
            return _produtoService.DeleteProduto(id);
         }
+
     }
 }

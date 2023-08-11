@@ -1,15 +1,14 @@
 ﻿using Google.Cloud.Firestore;
 using Newtonsoft.Json;
+using WebAdmin.Shared.Commons.Resources;
 using WebAdmin.Shared.Models;
 
 namespace WebAdmin.DataAccess.DomainServices
 {
-    public class ProdutoDataAccess
+    public class ProdutoDataAccess : AccessBase
     {
-        private static Access FireStore { get { return new Access("genesis-93f18"); }  }
-        private static string NomeTabela { get { return "Produtos"; }  }
-        private static string Buket { get { return "genesis-93f18.appspot.com"; }  }
 
+        private static string NomeTabela { get { return "Produtos"; } }
         public static async Task<List<ProdutoModel>> GetProdutosSelect(List<string> listaSeqs)
         {
             List<ProdutoModel> lstProduto = new List<ProdutoModel>();
@@ -37,7 +36,7 @@ namespace WebAdmin.DataAccess.DomainServices
         public static async Task<List<ProdutoModel>> GetAllProdutos()
         {
 
-           
+
             try
             {
                 Query produtoQuery = FireStore.AcessoBaseFireStore().Collection(NomeTabela);
@@ -71,7 +70,10 @@ namespace WebAdmin.DataAccess.DomainServices
             {
                 foreach (var imagem in produto.Imagem)
                 {
-                    imagem.Url = SalvaArquivoStorage(imagem, Buket);
+                    var rotaPasta = StorageDataAccess.MontaRotaPasta(NomeTabela, "", "Imagem");
+                    StorageDataAccess.AddFolder(rotaPasta);
+                    rotaPasta = StorageDataAccess.MontaRotaPasta(NomeTabela, imagem.Nome, "Imagem");
+                    imagem.Url = StorageDataAccess.SalvaArquivoStorage(imagem, rotaPasta);
                 }
             }
             try
@@ -89,12 +91,18 @@ namespace WebAdmin.DataAccess.DomainServices
         public static async Task UpdateProduto(ProdutoModel produto)
         {
 
-            if (produto.Imagem!= null && produto.Imagem.Count() > 0)
+            if (produto.Imagem != null && produto.Imagem.Count() > 0)
             {
                 foreach (var imagem in produto.Imagem)
                 {
                     if (imagem.Conteudo != null)
-                        imagem.Url = SalvaArquivoStorage(imagem, Buket);
+                    {
+
+                        var rotaPasta = StorageDataAccess.MontaRotaPasta(NomeTabela, "", "Imagem");
+                        StorageDataAccess.AddFolder(rotaPasta);
+                        rotaPasta = StorageDataAccess.MontaRotaPasta(NomeTabela, imagem.Nome, "Imagem");
+                        imagem.Url = StorageDataAccess.SalvaArquivoStorage(imagem, rotaPasta);
+                    }
                 }
             }
 
@@ -105,7 +113,7 @@ namespace WebAdmin.DataAccess.DomainServices
             }
             catch (Exception ex)
             {
-                Exception exception = new Exception(message: "Erro ao atualizar o produtos." + ex.Message);
+                Exception exception = new Exception(message: GlobalResources.Err_Atualizar_Produto + ex.Message);
                 throw exception;
             }
         }
@@ -147,32 +155,7 @@ namespace WebAdmin.DataAccess.DomainServices
                 throw exception;
             }
         }
-        public static string SalvaArquivoStorage(ArquivoModel arquivo, string buket)
-        {
-            try
-            {
-                string url = "";
-                using (var stream = new MemoryStream(arquivo.Conteudo))
-                {
-                    var retorno = FireStore.AcessoBaseStorage().UploadObject(buket, arquivo.Nome, arquivo.Tipo, stream);
 
-                    string[] sp = retorno.Id.Split('/');
-
-                    //remove a ultima posição do split
-                    Array.Resize(ref sp, sp.Length - 1);
-
-                    url = "https://storage.googleapis.com/" + string.Join("/", sp);
-
-                    stream.Close();
-                }
-                return url;
-            }
-            catch (Exception ex)
-            {
-                Exception exception = new Exception(message: "Houve um erro ao salvar o arquivo no storage do fire base, código do erro:" + ex.Message);
-                throw exception;
-            }
-        }
     }
 }
 
