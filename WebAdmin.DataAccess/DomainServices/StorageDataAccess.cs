@@ -166,7 +166,8 @@ namespace WebAdmin.DataAccess.DomainServices
                 }
                 else
                 {
-                    retorno = $"{nomeTabela}/{subPasta}/{nomeArquivo}";                }
+                    retorno = $"{nomeTabela}/{subPasta}/{nomeArquivo}";    
+                }
             }
             else
             {

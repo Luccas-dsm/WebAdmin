@@ -98,9 +98,7 @@ namespace WebAdmin.DataAccess.DomainServices
                     if (imagem.Conteudo != null)
                     {
 
-                        var rotaPasta = StorageDataAccess.MontaRotaPasta(NomeTabela, "", "Imagem");
-                        StorageDataAccess.AddFolder(rotaPasta);
-                        rotaPasta = StorageDataAccess.MontaRotaPasta(NomeTabela, imagem.Nome, "Imagem");
+                        var rotaPasta = StorageDataAccess.MontaRotaPasta(NomeTabela, imagem.Nome, "Imagem");
                         imagem.Url = StorageDataAccess.SalvaArquivoStorage(imagem, rotaPasta);
                     }
                 }

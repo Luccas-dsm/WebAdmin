@@ -1,41 +1,50 @@
 ﻿@using WebAdmin.Shared.Enums;
 @using WebAdmin.Shared.Models;
-<div class="c-group__item">
-    <div class="c-character">
-        <div class="c-form__field">
-            <label class="c-form__label" for="">Nome do campo</label>
-            <input class="c-form__input" type="text" id="" @bind="@Campo.Input" required>
-        </div>
-        <div class="c-form__field">
-            <label class="c-form__label" for="">Informativo</label>
-            <input class="c-form__input" type="text" id="" @bind="@Campo.Informativo" required>
-        </div>
-        <div class="c-checkbox__group">
-            <input class="c-checkbox" id="c-check" type="checkbox" @bind="@Campo.Obrigatorio">
-            <label class="c-form__label" for="c-check">Campo obrigatório</label>
-        </div>
-    </div>
-    <div class="c-form__field">
-        <label class="c-form__label" for="">Opções disponíveis</label>
-        <input class="c-form__input" type="text" id="" @bind="@NovaOpcao" @onkeyup="@Enter">
 
-        <MudChipSet AllClosable="true" OnClose="Closed">
-            @if (Campo.Opcoes.Count() > 0)
-            {
-                @foreach (var value in Campo.Opcoes)
+<EditForm Model="Campo" OnValidSubmit="SubmitValid" >
+    <div class="c-group__item">
+        <div class="c-character">
+            <div class="c-form__field">
+                <label class="c-form__label" for="">Nome do campo</label>
+             @*   <InputText class="c-form__input" type="text" id="" @bind-Value="@Campo.Input" required/>*@
+                <MudTextField  Class="c-form__input" @bind-Value="Campo.Input" Variant="Variant.Text" Required="true" id="" ErrorText="O campo input é obrigatório"></MudTextField>
+
+            </div>
+            <div class="c-form__field">
+                <label class="c-form__label" for="">Informativo</label>
+                @*<input class="c-form__input" type="text" id="" @bind="@Campo.Informativo" required>*@
+                <MudTextField Class="c-form__input" @bind-Value="Campo.Informativo" Variant="Variant.Text" Required="true" id="" ErrorText="O campo informativo é obrigatório"></MudTextField>
+            </div>
+            <div class="c-checkbox__group">
+                @*<input class="c-checkbox" id="c-check" type="checkbox" @bind="@Campo.Obrigatorio">*@
+              @*  <MudCheckBox  @bind-Value="Campo.Obrigatorio" Required="true"></MudCheckBox>*@
+                <label class="c-form__label" for="c-check">Campo obrigatório</label>
+            </div>
+        </div>
+        <div class="c-form__field">
+            <label class="c-form__label" for="">Opções disponíveis</label>
+     @*       <input class="c-form__input" type="text" id="" @bind="@NovaOpcao" @onkeyup="@Enter">*@
+            <MudTextField Class="c-form__input" @bind-Value="NovaOpcao" Variant="Variant.Text" Required="true" id="" ErrorText="O campo opção é obrigatório" @onkeyup="@Enter"></MudTextField>
+
+            <MudChipSet AllClosable="true" OnClose="Closed">
+                @if (Campo.Opcoes.Count() > 0)
                 {
-                    <MudChip Text="@value" Color="Color.Primary"></MudChip>
+                    @foreach (var value in Campo.Opcoes)
+                    {
+                        <MudChip Text="@value" Color="Color.Primary"></MudChip>
+                    }
                 }
-
-            }
-        </MudChipSet>
+            </MudChipSet>
+        </div>
+        <button class="c-btn__tertiary-danger" @onclick="(() => OnRemoverCampo.InvokeAsync(Campo))">
+            X
+            <span>Remover campo</span>
+        </button>
     </div>
-    <button class="c-btn__tertiary-danger" @onclick="(() => OnRemoverCampo.InvokeAsync(Campo))">
-        X
-        <span>Remover campo</span>
-    </button>
-</div>
 
+    <DataAnnotationsValidator/>
+    <ValidationSummary/>
+</EditForm>
 @code {
 
     public string NovaOpcao { get; set; }
@@ -53,6 +62,10 @@
             Campo.Opcoes.Add(NovaOpcao);
             NovaOpcao = "";
         }
+    }
+    public async Task SubmitValid()
+    {
+        Console.WriteLine("Campos preenchidos corretamente");
     }
 
     public void Closed(MudChip chip) => Campo.Opcoes.Remove(chip.Text);
