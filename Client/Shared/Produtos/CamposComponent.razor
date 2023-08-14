@@ -6,24 +6,20 @@
         <div class="c-character">
             <div class="c-form__field">
                 <label class="c-form__label" for="">Nome do campo</label>
-             @*   <InputText class="c-form__input" type="text" id="" @bind-Value="@Campo.Input" required/>*@
                 <MudTextField  Class="c-form__input" @bind-Value="Campo.Input" Variant="Variant.Text" Required="true" id="" ErrorText="O campo input é obrigatório"></MudTextField>
 
             </div>
             <div class="c-form__field">
                 <label class="c-form__label" for="">Informativo</label>
-                @*<input class="c-form__input" type="text" id="" @bind="@Campo.Informativo" required>*@
                 <MudTextField Class="c-form__input" @bind-Value="Campo.Informativo" Variant="Variant.Text" Required="true" id="" ErrorText="O campo informativo é obrigatório"></MudTextField>
             </div>
             <div class="c-checkbox__group">
-                @*<input class="c-checkbox" id="c-check" type="checkbox" @bind="@Campo.Obrigatorio">*@
-              @*  <MudCheckBox  @bind-Value="Campo.Obrigatorio" Required="true"></MudCheckBox>*@
                 <label class="c-form__label" for="c-check">Campo obrigatório</label>
+                <MudCheckBox Class="c-form__input" @bind-Checked="Campo.Obrigatorio" Variant="Variant.Text" Required="true" id="" ErrorText="O campo é obrigatório"></MudCheckBox>
             </div>
         </div>
         <div class="c-form__field">
             <label class="c-form__label" for="">Opções disponíveis</label>
-     @*       <input class="c-form__input" type="text" id="" @bind="@NovaOpcao" @onkeyup="@Enter">*@
             <MudTextField Class="c-form__input" @bind-Value="NovaOpcao" Variant="Variant.Text" Required="true" id="" ErrorText="O campo opção é obrigatório" @onkeyup="@Enter"></MudTextField>
 
             <MudChipSet AllClosable="true" OnClose="Closed">
@@ -36,14 +32,13 @@
                 }
             </MudChipSet>
         </div>
-        <button class="c-btn__tertiary-danger" @onclick="(() => OnRemoverCampo.InvokeAsync(Campo))">
+        <button type="button" class="c-btn__tertiary-danger" @onclick="(() => OnRemoverCampo.InvokeAsync(Campo))">
             X
             <span>Remover campo</span>
         </button>
     </div>
 
     <DataAnnotationsValidator/>
-    <ValidationSummary/>
 </EditForm>
 @code {
 

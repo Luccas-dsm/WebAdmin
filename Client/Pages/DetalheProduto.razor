@@ -6,62 +6,66 @@
 
 <h1>Detalhe do produto</h1>
 
-<div class="c-container">
-    <h2 class="c-container__title">Informações básicas</h2>
+<EditForm Model="Produto" OnSubmit="@Onsubmit">
 
-    <div class="c-group">
-        <div class="c-group__item">
-            <div class="c-form__field">
-                <label class="c-form__label" for="">Nome do Produto</label>
-                <input class="c-form__input" type="text" id="" @bind="@Produto.Nome" required>
-            </div>
-            <div class="c-form__field">
-                <label class="c-form__label" for="">Descrição</label>
-                <textarea class="c-form__textarea" type="text" id="" @bind="@Produto.Descricao" required></textarea>
-            </div>
-        </div>
+    <div class="c-container">
+        <h2 class="c-container__title">Informações básicas</h2>
 
-        <div class="c-images c-group__item">
-            @foreach (var index in Enumerable.Range(0, 4))
-            {
-                <div class="c-images__item">
-                    <label for=@("imagem-" + index)>
-                        <img class="c-images__preview" src=@(ExibeImagem(index)) />
-                    </label>
-                    <InputFile hidden="true" type="file" id=@("imagem-" + index) OnChange="(e) => SelecionarImagem(e, index)" />
+        <div class="c-group">
+            <div class="c-group__item">
+                <div class="c-form__field">
+                    <label class="c-form__label" for="">Nome do Produto</label>
+                    <input class="c-form__input" type="text" id="" @bind="@Produto.Nome" required>
                 </div>
-            }
+                <div class="c-form__field">
+                    <label class="c-form__label" for="">Descrição</label>
+                    @*<textarea class="c-form__textarea" type="text" id="" @bind="@Produto.Descricao" required></textarea>*@
+                    <MudTextField class="c-form__textarea" T="string" Variant="Variant.Text" Text="@Produto.Descricao" Lines="10" />
+                </div>
+            </div>
+
+            <div class="c-images c-group__item">
+                @foreach (var index in Enumerable.Range(0, 4))
+                {
+                    <div class="c-images__item">
+                        <label for=@("imagem-" + index)>
+                            <img class="c-images__preview" src=@(ExibeImagem(index)) />
+                        </label>
+                        <InputFile hidden="true" type="file" id=@("imagem-" + index) OnChange="(e) => SelecionarImagem(e, index)" />
+                    </div>
+                }
+            </div>
         </div>
     </div>
-</div>
 
-<div class="c-container">
-    <h2 class="c-container__title">Características que deverão ser selecionadas pelo usuário</h2>
+    <div class="c-container">
+        <h2 class="c-container__title">Características que deverão ser selecionadas pelo usuário</h2>
 
-    @if (Produto.Campos != null)
-    {
-        @foreach (var item in Produto.Campos)
+        @if (Produto.Campos != null)
         {
-            <CamposComponent OnRemoverCampo="RemoverCampo" Campo="@item"></CamposComponent>
+            @foreach (var item in Produto.Campos)
+            {
+                <CamposComponent OnRemoverCampo="RemoverCampo" Campo="@item"></CamposComponent>
+            }
+
         }
-
-    }
-
-    <hr />
-    <button class="c-btn__tertiary" @onclick="AddItem">
-        +
-        <span>Adicionar campo</span>
-    </button>
-</div>
-<div class="c-btn__group">
-    <button class="c-btn__secondary-danger">
-        <span>Cancelar</span>
-    </button>
-    <button class="c-btn__primary" @onclick="@Onsubmit">
-        <span>Salvar alterações</span>
-    </button>
-</div>
-
+        <hr/>
+        <button type="button" class="c-btn__tertiary" @onclick="AddItem">
+            +
+            <span>Adicionar campo</span>
+        </button>
+    </div>
+    <div class="c-btn__group">
+        <button class="c-btn__secondary-danger">
+            <span>Cancelar</span>
+        </button>
+        <button type="submit" class="c-btn__primary">
+            <span>Salvar alterações</span>
+        </button>
+    </div>
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+</EditForm>
 @code {
     public string Texto { get; set; }
 
@@ -182,4 +186,4 @@
 
 
 
-}
+    }
